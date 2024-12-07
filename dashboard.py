@@ -67,6 +67,12 @@ def login():
         
     return render_template('login.html')
     
+@app.route('/logout')
+def logout():
+    session.pop("email", None)
+    session.pop("thing_id", None)
+    return redirect(url_for('login'))
+
 @app.route("/register" , methods = ["POST", "GET"])
 def register():
     if request.method == "POST":
@@ -90,6 +96,10 @@ def register():
     else:
         return render_template("register.html")
     
+@app.route("/dashboard")
+def dashboard():
+    return render_template("dashboard.html")
+
 @app.route('/scan')
 def index():
     return render_template('scan.html')
