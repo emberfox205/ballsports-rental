@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, Response
 from flask_sqlalchemy import SQLAlchemy
 import json
 from datetime import timedelta , datetime
 import sqlite3, json
+from libs.video import scanner
 
 markers = []
 app = Flask(__name__)
@@ -31,7 +32,6 @@ def register():
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
-        thing_id = request.form["tid"]
         
         found_user = User.query.filter_by(email = email).first()
         if found_user:
@@ -42,13 +42,25 @@ def register():
 
         else:
             flash(f'Successfully registered!')
-            account = User(email, password, thing_id)
+            account = User(email, password)
             db.session.add(account)
             db.session.commit()
             return redirect(url_for("login"))
     else:
         return render_template("register.html")
     
+    
+    
+@app.route('/scan')
+def index():
+    return render_template('scan.html')
+
+@app.route("/video")
+def video():
+    return Response(scanner(), mimetype="multipart/x-mixed-replace; boundary=frame")   
+
+
+
 
 @app.route("/data", methods=["POST", "GET"])
 def data():
