@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, Response
 from flask_sqlalchemy import SQLAlchemy
 import json
 from datetime import timedelta , datetime
 import sqlite3, json
+from libs.video import scanner
 
 
 markers = []
@@ -89,6 +90,15 @@ def register():
     else:
         return render_template("register.html")
     
+    
+    
+@app.route('/scan')
+def index():
+    return render_template('scan.html')
+
+@app.route("/video")
+def video():
+    return Response(scanner(), mimetype="multipart/x-mixed-replace; boundary=frame")   
 
 if __name__ == "__main__":          
     with app.app_context():
