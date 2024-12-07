@@ -35,7 +35,7 @@
     justify-content: center;
     flex-direction: column;
     position: absolute; 
-    z-index: 2; 
+    z-index: 1; 
     color: black;
     font-weight: bold;
     text-align: left;
@@ -73,7 +73,7 @@
   border-width: 3px;
   border-radius: 5px;
   border-color: #000000;
-  z-index: 3;
+  z-index: 1;
 }
 
 #log-gister:hover {
@@ -89,6 +89,4 @@
   color : red;
 }
 
-#content {
-    width: 100%;
-}
+
