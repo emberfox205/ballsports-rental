@@ -6,7 +6,7 @@ import sqlite3, json
 
 markers = []
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///stalkinator.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ballusers.db'
 app.permanent_session_lifetime = timedelta(minutes= 5)
 app.config['SECRET_KEY'] = 'averysecretkey'
 db = SQLAlchemy(app)
@@ -16,9 +16,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)
-    def __init__(self, email,password, tid):
+    def __init__(self, email,password):
         self.email = email
-        self.tid = tid
         self.password = password
         
     
@@ -54,7 +53,7 @@ def register():
 @app.route("/data", methods=["POST", "GET"])
 def data():
     
-    connect = sqlite3.connect("instance/stalkinator.db")
+    connect = sqlite3.connect("instance/balluser.db")
     connect.row_factory = sqlite3.Row  # Set the row_factory to sqlite3.Row
     cur = connect.cursor()
     
