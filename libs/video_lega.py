@@ -5,7 +5,7 @@ def scanner():
     camera = cv2.VideoCapture('/mnt/d/Coding_Projects/PythonHacks/Intro_CS/ballsports-rental/inputs/Ball.mp4')
     fps = camera.get(cv2.CAP_PROP_FPS)
     delay = 1 / fps
-
+    
     # Check for available camera
     while True:
         # read the camera frame

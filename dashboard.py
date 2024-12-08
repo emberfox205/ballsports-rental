@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 import json
 from datetime import timedelta , datetime
 import sqlite3, json
-from libs.video import scanner
+from video import scanner
 
 
 markers = []
