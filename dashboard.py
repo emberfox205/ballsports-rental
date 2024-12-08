@@ -1,10 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, Response
+from flask import Flask, render_template, request, redirect, url_for, flash, session, Response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import json
 from datetime import timedelta , datetime
 import sqlite3, json
-from video import scanner
-
+import base64
+from io import BytesIO
+from PIL import Image
+from libs.img_handling import process_image
 
 markers = []
 app = Flask(__name__)
@@ -104,9 +106,27 @@ def dashboard():
 def index():
     return render_template('scan.html')
 
-@app.route("/video")
-def video():
-    return Response(scanner(), mimetype="multipart/x-mixed-replace; boundary=frame")   
+@app.route("/detect", methods=["POST", "GET"])
+def detect():
+    if request.method == "POST":
+        data = request.json
+        if not data or "images" not in data:
+            return jsonify({'error': 'No images provided'}), 400
+        
+        images = data["images"]
+        processed_images = []
+        
+        for img_base64 in images:
+            # Decode Base64 to bytes
+            img_data = base64.b64decode(img_base64.split(',')[1])  # Skip the data URI prefix
+            img = Image.open(BytesIO(img_data))
+            processed_images.append(img)
+
+            if result := process_image(processed_images):
+                return result 
+            else:
+                return None
+  
 
 if __name__ == "__main__":          
     with app.app_context():
