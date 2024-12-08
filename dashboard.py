@@ -108,6 +108,19 @@ def dashboard():
 def rent():
     return render_template('rent.html')
 
+@app.route('/returnning')
+def returnning():
+    return render_template('return.html')
+
+@app.route('/finalRent')
+def finalRent():
+    return render_template("finalRent.html")
+
+@app.route('/finalReturn')
+def finalReturn():
+    return render_template("finalReturn.html")
+
+
 @app.route("/detect", methods=["POST", "GET"])
 def detect():
     if request.method == "POST":
