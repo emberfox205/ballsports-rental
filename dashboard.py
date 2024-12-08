@@ -16,7 +16,7 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(100), nullable=False, unique=True)
+    email = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(100), nullable=False)
     date = db.Column(db.String(100))
     def __init__(self, email, password, date = None):
@@ -26,9 +26,11 @@ class User(db.Model):
 
 class Ball(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100),nullable = False)
     sport = db.Column(db.String(50), nullable = False)
     condition = db.Column(db.String(10), nullable = False)
-    def __init__(self, sport, condition):
+    def __init__(self, email, sport, condition):
+        self.email = email
         self.sport = sport
         self.condition = condition
 
@@ -100,9 +102,9 @@ def register():
 def dashboard():
     return render_template("dashboard.html")
 
-@app.route('/scan')
-def index():
-    return render_template('scan.html')
+@app.route('/rent')
+def rent():
+    return render_template('rent.html')
 
 @app.route("/video")
 def video():
