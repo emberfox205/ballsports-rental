@@ -12,7 +12,7 @@ class_names = [
     'tennis_ball',
     'volleyball'
 ]
-model = tf.keras.models.load_model('model/uncleanse_ball_classification_model.keras', compile=False)
+model = tf.keras.models.load_model('model/model.keras', compile=False)
 recognition_data =  {
         'ball_name': None,  
         'accuracy': None,
