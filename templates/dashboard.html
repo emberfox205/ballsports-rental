@@ -20,8 +20,8 @@
                 </div>
             </div>
         <div class = "flexbox-container">
-            <button class="box" onclick="redirectTo('scan.html')">Rent</button>
-            <button class="box" onclick="redirectTo('scan.html')">Return</button>
+            <button class="box" onclick="redirectTo('{{ url_for('rent')}}')">Rent</button>
+            <button class="box" onclick="redirectTo('{{ url_for('returnning')}}')">Return</button>
         </div>
     </body>
 </html>

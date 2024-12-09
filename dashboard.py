@@ -18,7 +18,7 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(100), nullable=False, unique=True)
+    email = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(100), nullable=False)
     date = db.Column(db.String(100))
     def __init__(self, email, password, date = None):
@@ -28,9 +28,11 @@ class User(db.Model):
 
 class Ball(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100),nullable = False)
     sport = db.Column(db.String(50), nullable = False)
     condition = db.Column(db.String(10), nullable = False)
-    def __init__(self, sport, condition):
+    def __init__(self, email, sport, condition):
+        self.email = email
         self.sport = sport
         self.condition = condition
 
@@ -102,9 +104,22 @@ def register():
 def dashboard():
     return render_template("dashboard.html")
 
-@app.route('/scan')
-def index():
-    return render_template('scan.html')
+@app.route('/rent')
+def rent():
+    return render_template('rent.html')
+
+@app.route('/returnning')
+def returnning():
+    return render_template('return.html')
+
+@app.route('/finalRent')
+def finalRent():
+    return render_template("finalRent.html")
+
+@app.route('/finalReturn')
+def finalReturn():
+    return render_template("finalReturn.html")
+
 
 @app.route("/detect", methods=["POST", "GET"])
 def detect():
@@ -131,5 +146,6 @@ def detect():
 if __name__ == "__main__":          
     with app.app_context():
         db.create_all()
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    # cert goes before private key
+    app.run(host="0.0.0.0", port=8080, debug=True, ssl_context=("certs/certificate.crt", "certs/private.key"))
 	
