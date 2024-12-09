@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, Response, jsonify
 from flask_sqlalchemy import SQLAlchemy
-import json
+import tensorflow as tf
 from datetime import timedelta , datetime
 import sqlite3, json
 import base64
@@ -14,7 +14,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ballstorage.db'
 app.permanent_session_lifetime = timedelta(minutes= 5)
 app.config['SECRET_KEY'] = 'averysecretkey'
 db = SQLAlchemy(app)
-
+model = tf.keras.models.load_model('model/model.keras', compile=False)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -124,23 +124,62 @@ def finalReturn():
 @app.route("/detect", methods=["POST", "GET"])
 def detect():
     if request.method == "POST":
+        
+       # Create a dict in the session to store the recognized ball, accuracy and recognition count  
+       if 'recognition_data' not in session:
+        session['recognition_data'] = {
+            'ball_name': None,  
+            'accuracy': None,
+            'recognition_count': 0  
+        }
+        
+        # Get image
         data = request.json
         if not data or "images" not in data:
             return jsonify({'error': 'No images provided'}), 400
         
-        images = data["images"]
-        processed_images = []
+        # Decode image
+        image = data["images"]
+        image = base64.b64decode(image.split(',')[1])  # Skip the data URI prefix, idk what this is
+        image = Image.open(BytesIO(image))
         
-        for img_base64 in images:
-            # Decode Base64 to bytes
-            img_data = base64.b64decode(img_base64.split(',')[1])  # Skip the data URI prefix
-            img = Image.open(BytesIO(img_data))
-            processed_images.append(img)
+        # Detect the ball
+        is_recognized = process_image(model, image)  # return dict {"class_name": ,"confidence": }
 
-            if result := process_image(processed_images):
-                return result 
+        recognition_data = session['recognition_data']
+        if is_recognized:
+            
+            # First recognition
+            if recognition_data['ball_name'] is None:
+                recognition_data['ball_name'] = is_recognized["class_name"]
+                recognition_data['confidence'] = is_recognized["confidence"]
+                recognition_data['recognition_count'] = 1
+            
+            # If next recognition produce same result
+            elif recognition_data['ball_name'] == is_recognized["class_name"]:
+                # Increment count if the same face is recognized
+                recognition_data['confidence'] = is_recognized["confidence"]
+                recognition_data['recognition_count'] += 1
+            
+            # Reset if diffrent result is detected
             else:
-                return None
+                recognition_data['ball_name'] = is_recognized["class_name"]
+                recognition_data['confidence'] = is_recognized["confidence"]
+                recognition_data['recognition_count'] = 1
+
+            session.modified = True  # Mark session as modified
+
+            # Check if the count reaches the threshold
+            if recognition_data['ball_name'] >= 10:
+                recognition_data['recognition_count'] = 0
+                return redirect(url_for('finalRent'))
+
+        return jsonify({
+            'ball_name': recognition_data['ball_name'],
+            'confidence': recognition_data['confidence'],
+        })
+
+
   
 
 if __name__ == "__main__":          
