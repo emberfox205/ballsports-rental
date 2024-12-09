@@ -29,41 +29,19 @@ def preprocess_image(img, target_size=(224, 224)):
 
 
 
-def process_image(img_list:list) -> str: 
-    # Example usage
-    image_path = 'inputs/image.jpg'
-    i = 0
-    high_accus = []
+def process_image(model, img) -> dict: 
     try:
-        #camera = cv2.VideoCapture('inputs/Ball.mp4')
-        model = tf.keras.models.load_model('model/uncleanse_ball_classification_model.keras')
-        
-        while i < len(img_list):
-          
-            #pil_img = Image.open(image_path)
-            
-            if i % 3 == 0: # Detect ball each 5 frame for efficency ** TANGABLE **
-                pil_img = img_list[i]
-                preprocessed_img = preprocess_image(pil_img)
-                predictions = model.predict(preprocessed_img)
-                predicted_class_idx = np.argmax(predictions[0])
-                confidence = predictions[0][predicted_class_idx]
-                print({
-                    'class_name': class_names[predicted_class_idx],
-                    'confidence': float(confidence)})
-                if round(float(confidence), 4) > 0.85: # Set bottom limit for best results ** TANGABLE **
-                    high_accus.append({
-                    'class_name': class_names[predicted_class_idx],
-                    'confidence': float(confidence)})
-                
-            i += 1
-            if len(high_accus) > 2:  # Ratio for detected_w_high_acc/ number of frames ** TANGABLE **
-                return ({
-                    'class_name': max(high_accus, key=lambda x: x['confidence'])['class_name'],
-                    'confidence': max(high_accus, key=lambda x: x['confidence'])['confidence']
-                }) ## Should be json
+        pil_img = img
+        preprocessed_img = preprocess_image(pil_img)
+        predictions = model.predict(preprocessed_img)
+        predicted_class_idx = np.argmax(predictions[0])
+        confidence = predictions[0][predicted_class_idx]
+        print({
+            'class_name': class_names[predicted_class_idx],
+            'confidence': float(confidence)})
+        if round(float(confidence), 4) > 0.85: # Set bottom limit for best results ** TANGABLE **
+            return {'class_name': class_names[predicted_class_idx],'confidence': float(confidence)}
         return None
-           
     except Exception as e:
         print(f"Error processing image: {str(e)}")
         return None
@@ -90,9 +68,10 @@ if __name__ == "__main__":
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 camera.release()
                 break
-            pil_img = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
+            pil_img = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
             imgs.append(pil_img)
-            
+    imgs[1].save(f'frame_.jpg')
+    camera.release()        
     print(len(imgs))
     print(process_image(imgs))
 
