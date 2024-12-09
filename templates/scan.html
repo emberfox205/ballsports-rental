@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style>
-      body {
-        background-color: white;
-      }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Permissions-Policy" content="camera=*">
+    </nav><link rel="stylesheet" href="{{url_for('static', filename = 'css/main.css')}}">
+    <title>Scanning</title>
   </head>
   <body>
     <h1>Scanning</h1>
-    <div>
-      <img src="{{ url_for('video') }}" width="45%"/>
+    <div class="display-cover">
+      <video class="webcam" width="45%"></video>
     </div>
     <div>
-      <button type="button">Button 1</button>
-      <button type="button">Button 2</button>
+      <button class="return_button" type="button">Return</button>
     </div>
+    <script src="{{url_for('static', filename = 'js/scan.js') }}"></script>
   </body>
 </html>
