@@ -126,26 +126,36 @@ def detect():
     if request.method == "POST":
         
        # Create a dict in the session to store the recognized ball, accuracy and recognition count  
-       if 'recognition_data' not in session:
-        session['recognition_data'] = {
-            'ball_name': None,  
-            'accuracy': None,
-            'recognition_count': 0  
-        }
-        
+        if 'recognition_data' not in session:
+           session['recognition_data'] = {
+               'ball_name': None,  
+               'confidence': None,
+               'recognition_count': 0
+               }
         # Get image
         data = request.json
-        if not data or "images" not in data:
+        print(dict(data).keys())
+        if data is None or "image" not in data:
+            print("NO")
             return jsonify({'error': 'No images provided'}), 400
+        print("YESSSSSSSS")
+
         
+        with open('recognized_ball.txt', 'w') as f:
+            f.write(f"{dict(data)["image"]}\n")
+            
         # Decode image
-        image = data["images"]
-        image = base64.b64decode(image.split(',')[1])  # Skip the data URI prefix, idk what this is
-        image = Image.open(BytesIO(image))
+        try:
+            image = data["image"]
+            image = base64.b64decode(image.split(',')[1])  # Skip the data URI prefix
+            image = Image.open(BytesIO(image))
+            image = image.convert('RGB')
+        except Exception as e:
+            return jsonify({'error': str(e)}), 400
         
         # Detect the ball
         is_recognized = process_image(model, image)  # return dict {"class_name": ,"confidence": }
-
+        print(is_recognized)
         recognition_data = session['recognition_data']
         if is_recognized:
             
@@ -170,15 +180,17 @@ def detect():
             session.modified = True  # Mark session as modified
 
             # Check if the count reaches the threshold
-            if recognition_data['ball_name'] >= 10:
+            if recognition_data['recognition_count'] >= 10:
                 recognition_data['recognition_count'] = 0
                 return redirect(url_for('finalRent'))
 
         return jsonify({
             'ball_name': recognition_data['ball_name'],
             'confidence': recognition_data['confidence'],
-        })
-
+        }), 200
+    else:
+        return jsonify({'error': 'Method Not Allowed'}), 405
+    
 
   
 
