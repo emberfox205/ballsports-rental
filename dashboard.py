@@ -102,6 +102,8 @@ def register():
     
 @app.route("/dashboard")
 def dashboard():
+    if "email" not in session:
+        return redirect(url_for("login"))
     return render_template("dashboard.html")
 
 @app.route('/rent')
@@ -112,19 +114,28 @@ def rent():
 
 @app.route('/returnning')
 def returnning():
+    if "email" not in session:
+        return redirect(url_for("login"))
     return render_template('return.html')
 
 @app.route('/finalRent')
 def finalRent():
+    if "email" not in session:
+        return redirect(url_for("login"))
     return render_template("finalRent.html")
 
 @app.route('/finalReturn')
 def finalReturn():
+    if "email" not in session:
+        return redirect(url_for("login"))
     return render_template("finalReturn.html")
 
 
 @app.route("/detect", methods=["POST", "GET"])
 def detect():
+    if "email" not in session:
+        return redirect(url_for("login"))
+    
     if request.method == "POST":
        # Create a dict in the session to store the recognized ball, accuracy and recognition count  
         if 'recognition_data' not in session:
@@ -137,10 +148,14 @@ def detect():
         data = request.json
         print(dict(data).keys())
         if data is None or "image" not in data:
-            print("Received Unsuccessfully ")
+            print("NO")
             return jsonify({'error': 'No images provided'}), 400
-        print("Successfully Received")
+        print("YESSSSSSSS")
 
+        
+        with open('recognized_ball.txt', 'w') as f:
+            f.write(f"{dict(data)["image"]}\n")
+            
         # Decode image
         try:
             image = data["image"]
@@ -152,11 +167,10 @@ def detect():
         
         # Detect the ball
         is_recognized = process_image(model, image)  # return dict {"class_name": ,"confidence": }
-        print(f"Recognised {is_recognized['class_name']}, with {round(is_recognized['confidence'],4)} confidence")
+        print("Recognised ",is_recognized)
         recognition_data = session['recognition_data']
         print(recognition_data['recognition_count'])
-        
-        if is_recognized and is_recognized["confidence"] > 0.85 :
+        if is_recognized:
             
             # First recognition
             if recognition_data['ball_name'] is None:
@@ -183,14 +197,11 @@ def detect():
                 recognition_data['recognition_count'] = 0
                 return jsonify({'redirect': 1}), 200
 
-        # Return result regardless the accuracy
-        if is_recognized:
-            return jsonify({
-                'ball_name': is_recognized["class_name"],
-                'confidence': is_recognized["confidence"],
-            }), 200
-        else:
-            return jsonify({'error': 'Error processing image'}), 400
+
+        return jsonify({
+            'ball_name': recognition_data['ball_name'],
+            'confidence': recognition_data['confidence'],
+        }), 200
     else:
         return jsonify({'error': 'Method Not Allowed'}), 405
     

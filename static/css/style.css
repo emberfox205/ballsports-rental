@@ -8,11 +8,6 @@ body{
     height: 100%;
     top: 0;
     left: 0;
-    background-image: url('blue.jpg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
-    background-size: cover; /* Ensures the background image covers the entire page */
     z-index: -1;
   }
 .custom-title{
@@ -61,7 +56,7 @@ body{
     color: black;
     border: 5px solid black;
     font-weight: bold;
-    background-color: white;
+    background-color: rgb(172, 238, 184);
     font-size: 40pt;
     border-radius: 20px;
     z-index: 1;

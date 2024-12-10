@@ -4,6 +4,8 @@
     flex-direction: column;
     position: relative;
     padding-right:40px;
+    align-items: center;
+    justify-content: center;
 }
 
 .navbar {
@@ -22,11 +24,11 @@
     background: black;
     justify-content: center;
     align-items: center;
-    width: 800px;
-    height: 600px;
+    width: 50%;
+    height: 91%;
+    left: 3%;
+    top: 4%;
     border-radius: 20px;
-    top:25px;
-    left:40px;
     flex-shrink:0;
 }
 
@@ -47,14 +49,14 @@
     border-radius: 20px;
     align-items: center;
     border: 5px solid black;
-    width: 600px;
-    height: 300px;
+    width: 40%;
+    height: 40%;
     color: red;
-    right: 40px;
-    top: 25px;
     font-size: 40pt;
     font-weight: bold;
     background-color: white;
+    right: 3%;
+    top: 4%;
 }
 .ball{
     display: flex;
@@ -65,27 +67,27 @@
     border: 5px solid black;
     font-size: 40pt;
     font-weight: bold;
-    color: red;
+    color: solid black;
     background-color: white;
-    width: 600px;
-    height: 150px;
-    right: 40px;
-    top: 335px;
+    width: 40%;
+    height: 29%;
+    right: 3%;
+    top: 45%;
 }
 
 .back{
     display: flex;
-    background: rgb(90, 90, 216);
+    background: rgb(121, 140, 216);
     position: absolute;
     justify-content: center;
     align-items: center;
     border-radius: 20px;
     border: 5px solid black;
     color: white;
-    width: 600px;
-    height: 130px;
-    right: 40px;
-    top: 495px;
+    width: 40%;
+    height: 20%;
+    right: 3%;
+    top:75%;
     transition: background-color 0.2s ease;
     font-weight: bold;
     font-size: 40pt;
@@ -98,8 +100,9 @@
 .main-overall-box {
     border: 5px solid black;
     background-color: white;
-    padding: 5% ;
+    padding: 5%;
     padding-block-start: 5%;
+    box-shadow: 50px 40px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     z-index: 1;
 }
 
@@ -110,7 +113,7 @@
 .receipt-content {
     text-align: left;
     padding: 6%;
-    background-color: grey;
+    
     z-index: 2;
 }
 
