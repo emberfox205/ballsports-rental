@@ -106,6 +106,8 @@ def dashboard():
 
 @app.route('/rent')
 def rent():
+    if "email" not in session:
+        return redirect(url_for("login"))
     return render_template('rent.html')
 
 @app.route('/returnning')

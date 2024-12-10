@@ -10,7 +10,7 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
   .then((devices) => {
     // Find the integrated camera
     const videoDevices = devices.filter(device => device.kind === 'videoinput');
-    const integratedCamera = videoDevices.find(device => device.label.toLowerCase().includes('integrated'));
+    const integratedCamera = videoDevices.find(device => device.label.toLowerCase().includes('webcam'));
 
     if (integratedCamera) {
       // Use the device ID of the integrated camera to request the media stream

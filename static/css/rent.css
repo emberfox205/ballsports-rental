@@ -1,0 +1,99 @@
+.scanContainer {
+    display: flex;
+    height: calc(100vh - 35px); /* Subtract the height of the navbar */
+    flex-direction: column;
+    position: relative;
+    padding-right:40px;
+}
+
+.navbar {
+    padding: 0.5rem 1rem; /* Adjust the padding */
+    height: 35px; /* Adjust the height */
+    border-bottom: 4px solid black;
+}
+
+.navbar-brand, .navbar-nav .nav-link {
+    padding: 0.5rem 1rem; /* Adjust the padding */
+    font-size: 1rem;
+}
+.camera{
+    display:flex;
+    position: absolute;
+    background: black;
+    justify-content: center;
+    align-items: center;
+    width: 800px;
+    height: 600px;
+    border-radius: 20px;
+    top:25px;
+    left:40px;
+    flex-shrink:0;
+}
+
+.webcam {
+    display:flex;
+    background: black;
+    justify-content: center;
+    border-radius: 20px;
+    border: 5px solid black;
+    height: 100%;
+    width: 100%;
+}
+
+.accuracy{
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    border-radius: 20px;
+    align-items: center;
+    border: 5px solid black;
+    width: 600px;
+    height: 300px;
+    color: red;
+    right: 40px;
+    top: 25px;
+    font-size: 40pt;
+    font-weight: bold;
+    background-color: white;
+}
+.ball{
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    border: 5px solid black;
+    font-size: 40pt;
+    font-weight: bold;
+    color: red;
+    background-color: white;
+    width: 600px;
+    height: 150px;
+    right: 40px;
+    top: 335px;
+}
+
+.back{
+    display: flex;
+    background: rgb(90, 90, 216);
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    border: 5px solid black;
+    color: white;
+    width: 600px;
+    height: 130px;
+    right: 40px;
+    top: 495px;
+    transition: background-color 0.2s ease;
+    font-weight: bold;
+    font-size: 40pt;
+}
+.back:hover {
+    background-color: rgb(47, 68, 231); /* Change background color on hover */
+    color: white; /* Change text color on hover */
+}
+
+
+
