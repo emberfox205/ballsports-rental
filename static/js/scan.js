@@ -88,7 +88,7 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       var accuracyElement = document.getElementById('accuracy');
       var accuracyValue = parseFloat(accuracy);
     
-      if (accuracyValue > 0.7) {
+      if (accuracyValue > 0.85) {
         accuracyElement.style.backgroundColor = '#39FF14';
         accuracyElement.style.color = 'red';
       } else {

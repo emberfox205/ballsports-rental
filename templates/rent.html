@@ -35,12 +35,14 @@
             </div>
           </nav>
           <div class="scanContainer">
+            {%block content%}
             <div class="camera">
               <video class="webcam"></video>
             </div>
             <div class="accuracy" id="accuracy">Accuracy</div>
             <div class="ball" id="ball-type">Ball-Type</div>
             <button class="back" onclick="goBack()">Back</button>
+            {%endblock%}
           </div>
     </body>
 </html>
