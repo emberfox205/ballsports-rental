@@ -37,9 +37,8 @@ def process_image(model, img) -> dict:
         print({
             'class_name': class_names[predicted_class_idx],
             'confidence': float(confidence)})
-        if round(float(confidence), 4) > 0.85: # Set bottom limit for best results ** TANGABLE **
-            return {'class_name': class_names[predicted_class_idx],'confidence': float(confidence)}
-        return None
+        return {'class_name': class_names[predicted_class_idx],'confidence': float(confidence)}
+       
     except Exception as e:
         print(f"Error processing image: {str(e)}")
         return None
