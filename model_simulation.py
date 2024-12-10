@@ -1,8 +1,9 @@
 import tensorflow as tf
 import numpy as np
 from PIL import Image
-import cv2
+import cv2, base64
 from flask import jsonify 
+from io import BytesIO
 class_names = [
     'american_football',
     'baseball',
@@ -92,7 +93,7 @@ def detect(image):
             return
 
 if __name__ == "__main__":
-    imgs = []
+    """"imgs = []
     camera = cv2.VideoCapture('inputs/Ball.mp4')
     for i in range(200):
         if i % 10 == 0:    
@@ -105,4 +106,18 @@ if __name__ == "__main__":
                 camera.release()
                 break
             pil_img = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+<<<<<<< HEAD
             detect(pil_img)
+=======
+            detect(pil_img)"""
+            
+    with open('recognized_ball.txt', 'r') as file:
+        image = file.read()
+    image = image.split(',')[1]
+    with open('ball.txt', 'w') as f:
+            f.write(f"{image}")
+    image = base64.b64decode(image)  # Skip the data URI prefix, idk what this is
+    image = Image.open(BytesIO(image))
+    image = image.convert('RGB')
+    detect(image)
+>>>>>>> 01e5338c073ded73e2bc1364732fda592e4cbff8
