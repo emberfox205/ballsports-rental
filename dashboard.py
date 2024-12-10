@@ -135,14 +135,10 @@ def detect():
         data = request.json
         print(dict(data).keys())
         if data is None or "image" not in data:
-            print("NO")
+            print("Received Unsuccessfully ")
             return jsonify({'error': 'No images provided'}), 400
-        print("YESSSSSSSS")
+        print("Successfully Received")
 
-        
-        with open('recognized_ball.txt', 'w') as f:
-            f.write(f"{dict(data)["image"]}\n")
-            
         # Decode image
         try:
             image = data["image"]
@@ -154,10 +150,11 @@ def detect():
         
         # Detect the ball
         is_recognized = process_image(model, image)  # return dict {"class_name": ,"confidence": }
-        print("Recognised ",is_recognized)
+        print(f"Recognised {is_recognized['class_name']}, with {round(is_recognized['confidence'],4)} confidence")
         recognition_data = session['recognition_data']
         print(recognition_data['recognition_count'])
-        if is_recognized:
+        
+        if is_recognized and is_recognized["confidence"] > 0.85 :
             
             # First recognition
             if recognition_data['ball_name'] is None:
@@ -184,10 +181,10 @@ def detect():
                 recognition_data['recognition_count'] = 0
                 return jsonify({'redirect': 1}), 200
 
-
+        # Return result regardless the accuracy
         return jsonify({
-            'ball_name': recognition_data['ball_name'],
-            'confidence': recognition_data['confidence'],
+            'ball_name': is_recognized["class_name"],
+            'confidence': is_recognized["confidence"],
         }), 200
     else:
         return jsonify({'error': 'Method Not Allowed'}), 405
