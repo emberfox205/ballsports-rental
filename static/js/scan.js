@@ -61,7 +61,7 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       .then(response => response.json())
       .then(data => {
         console.log(data);
-        if ('ball_type' in data && 'confidence' in data) {
+        if ('ball_name' in data && 'confidence' in data) {
           updateDetection(data);
         }
         else if ('redirect' in data) {
