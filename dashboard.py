@@ -124,7 +124,6 @@ def finalReturn():
 @app.route("/detect", methods=["POST", "GET"])
 def detect():
     if request.method == "POST":
-        
        # Create a dict in the session to store the recognized ball, accuracy and recognition count  
         if 'recognition_data' not in session:
            session['recognition_data'] = {
@@ -155,8 +154,9 @@ def detect():
         
         # Detect the ball
         is_recognized = process_image(model, image)  # return dict {"class_name": ,"confidence": }
-        print(is_recognized)
+        print("Recognised ",is_recognized)
         recognition_data = session['recognition_data']
+        print(recognition_data['recognition_count'])
         if is_recognized:
             
             # First recognition
@@ -183,6 +183,7 @@ def detect():
             if recognition_data['recognition_count'] >= 5:
                 recognition_data['recognition_count'] = 0
                 return jsonify({'redirect': 1}), 200
+
 
         return jsonify({
             'ball_name': recognition_data['ball_name'],
