@@ -6,7 +6,7 @@ import sqlite3, json
 import base64
 from io import BytesIO
 from PIL import Image
-from libs.img_handling import process_image
+from libs.img_handling import process_image, logo_check
 
 markers = []
 app = Flask(__name__)
@@ -15,6 +15,7 @@ app.permanent_session_lifetime = timedelta(minutes= 5)
 app.config['SECRET_KEY'] = 'averysecretkey'
 db = SQLAlchemy(app)
 model = tf.keras.models.load_model('model/model.keras', compile=False)
+logo = tf.keras.models.load_model('model/logo.keras', compile=False)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -150,34 +151,38 @@ def detect():
         
         # Detect the ball
         is_recognized = process_image(model, image)  # return dict {"class_name": ,"confidence": }
+        is_recognized["logo_flag"] = 0
         print(f"Recognised {is_recognized['class_name']}, with {round(is_recognized['confidence'],4)} confidence")
         recognition_data = session['recognition_data']
-        print(recognition_data['recognition_count'])
+        print(f"Repeated {recognition_data['recognition_count']} times.")
         
         if is_recognized and is_recognized["confidence"] > 0.85 :
-            
-            # First recognition
-            if recognition_data['ball_name'] is None:
+            check_logo = logo_check(logo, image)
+            # First recognition with logo
+            if recognition_data['ball_name'] is None and check_logo:
                 recognition_data['ball_name'] = is_recognized["class_name"]
                 recognition_data['confidence'] = is_recognized["confidence"]
                 recognition_data['recognition_count'] = 1
+                is_recognized["logo_flag"] = 1
             
-            # If next recognition produce same result
-            elif recognition_data['ball_name'] == is_recognized["class_name"]:
+            # If next recognition produce same result with logo
+            elif recognition_data['ball_name'] == is_recognized["class_name"] and check_logo:
                 # Increment count if the same face is recognized
                 recognition_data['confidence'] = is_recognized["confidence"]
                 recognition_data['recognition_count'] += 1
+                is_recognized["logo_flag"] = 1
             
-            # Reset if diffrent result is detected
-            else:
+            # Reset if different result is detected with logo
+            elif recognition_data['ball_name'] != is_recognized["class_name"]:
                 recognition_data['ball_name'] = is_recognized["class_name"]
                 recognition_data['confidence'] = is_recognized["confidence"]
                 recognition_data['recognition_count'] = 1
+                is_recognized["logo_flag"] = 0
 
             session.modified = True  # Mark session as modified
 
             # Check if the count reaches the threshold
-            if recognition_data['recognition_count'] >= 5:
+            if recognition_data['recognition_count'] >= 3:
                 recognition_data['recognition_count'] = 0
                 return jsonify({'redirect': 1}), 200
 
@@ -185,7 +190,8 @@ def detect():
         if is_recognized:
             return jsonify({
                 'ball_name': is_recognized["class_name"],
-                'confidence': is_recognized["confidence"],
+                'confidence': is_recognized["confidence"]
+                #,'logo_flag': is_recognized["logo_flag"]
             }), 200
         else:
             return jsonify({'error': 'Error processing image'}), 400
