@@ -108,7 +108,7 @@ def dashboard():
 def rent():
     return render_template('rent.html')
 
-@app.route('/return')
+@app.route('/returnning')
 def returnning():
     return render_template('return.html')
 
