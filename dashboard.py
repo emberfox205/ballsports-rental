@@ -178,6 +178,9 @@ def detect():
                 recognition_data['confidence'] = is_recognized["confidence"]
                 recognition_data['recognition_count'] = 1
                 is_recognized["logo_flag"] = 1
+                # Reset if no logo is detected
+            elif not check_logo:
+                recognition_data['recognition_count'] = 0
                 
             session.modified = True  # Mark session as modified
 
@@ -188,6 +191,7 @@ def detect():
 
         # Return result regardless the accuracy
         if is_recognized:
+            print( is_recognized["logo_flag"])
             return jsonify({
                 'ball_name': is_recognized["class_name"],
                 'confidence': is_recognized["confidence"]
