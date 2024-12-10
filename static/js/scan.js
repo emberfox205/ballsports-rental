@@ -61,7 +61,7 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       .then(response => response.json())
       .then(data => {
         console.log(data);
-        if ('ball_type' in data && 'confidence' in data) {
+        if ('ball_name' in data && 'confidence' in data) {
           updateDetection(data);
         }
         else if ('redirect' in data) {
@@ -77,14 +77,27 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
     function updateDetection(detectionResponse) {
       var ballType = detectionResponse.ball_name || "Unknown";
       var accuracy = detectionResponse.confidence || "N/A";
-
+    
       if (typeof accuracy === 'number') {
         accuracy = accuracy.toFixed(4);
       }
-
+    
       document.getElementById('ball-type').textContent = ballType;
       document.getElementById('accuracy').textContent = accuracy;
+    
+      var accuracyElement = document.getElementById('accuracy');
+      var accuracyValue = parseFloat(accuracy);
+    
+      if (accuracyValue > 0.7) {
+        accuracyElement.style.backgroundColor = '#39FF14';
+        accuracyElement.style.color = 'red';
+      } else {
+        accuracyElement.style.backgroundColor = 'red'; // Reset to default if needed
+        accuracyElement.style.color = 'yellow';
+      }
     }
+    
+
 
     // Redirect on successful detection
     function detectionRedirect() {

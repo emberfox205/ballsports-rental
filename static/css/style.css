@@ -91,36 +91,3 @@ body{
     padding: 0.5rem 1rem; /* Adjust the padding */
     font-size: 1rem;
 }
-
-.main-overall-box {
-    border: 5px solid black;
-    background-color: white;
-    padding: 5% ;
-    padding-block-start: 5%;
-    z-index: 1;
-}
-
-.receipt-header {
-    text-align: left;
-}
-
-.receipt-content {
-    text-align: left;
-    padding: 6%;
-    background-color: grey;
-    z-index: 2;
-}
-
-.receipt-warning {
-    color: darkgray;
-}
-
-.rental-list {
-    list-style-type: none;
-    padding-left: 0;
-}
-
-.receipt-button {
-    display: flex;
-}
->>>>>>> 01e5338c073ded73e2bc1364732fda592e4cbff8
