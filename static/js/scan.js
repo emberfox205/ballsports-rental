@@ -1,6 +1,3 @@
-// Consecutive images -> Confirmation 
-var imageCounter = 0;
-
 // Request access to media devices to prompt for permissions
 navigator.mediaDevices.getUserMedia({ video: true, audio: false })
   .then((stream) => {
@@ -39,7 +36,7 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       video.play();
     };
     
-    // Take snapshot function
+    // Take snapshot and handle POST (Horrendous, I know)
     const takeSnapshot = () => {
       // Setup variables
       const video = document.querySelector('video');
@@ -63,19 +60,43 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       })
       .then(response => response.json())
       .then(data => {
-        console.log(response);
+        console.log(data);
+        if ('ball_type' in data && 'confidence' in data) {
+          updateDetection(data);
+        }
+        else if ('redirect' in data) {
+          detectionRedirect();
+        };
       })
       .catch((error) => {
         console.error('Error: ', error);
       });
     }
 
+    // Update components on /rent with response data
+    function updateDetection(detectionResponse) {
+      var ballType = detectionResponse.ball_name || "Unknown";
+      var accuracy = detectionResponse.confidence || "N/A";
+
+      if (typeof accuracy === 'number') {
+        accuracy = accuracy.toFixed(4);
+      }
+
+      document.getElementById('ball-type').textContent = ballType;
+      document.getElementById('accuracy').textContent = accuracy;
+    }
+
+    // Redirect on successful detection
+    function detectionRedirect() {
+      window.location.href = '/finalRent';
+      }
+
     // Call snapshot function 
     takeSnapshot();
 
     // Take snapshots continuously
     // Time interval to be changed
-    setInterval(takeSnapshot, 2000);
+    setInterval(takeSnapshot, 3000);
   })
   .catch((err) => {
     console.error(`${err.name}: ${err.message}`);

@@ -180,9 +180,9 @@ def detect():
             session.modified = True  # Mark session as modified
 
             # Check if the count reaches the threshold
-            if recognition_data['recognition_count'] >= 10:
+            if recognition_data['recognition_count'] >= 5:
                 recognition_data['recognition_count'] = 0
-                return redirect(url_for('finalRent'))
+                return jsonify({'redirect': 1}), 200
 
         return jsonify({
             'ball_name': recognition_data['ball_name'],
