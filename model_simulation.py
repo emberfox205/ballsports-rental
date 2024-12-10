@@ -106,9 +106,6 @@ if __name__ == "__main__":
                 camera.release()
                 break
             pil_img = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-<<<<<<< HEAD
-            detect(pil_img)
-=======
             detect(pil_img)"""
             
     with open('recognized_ball.txt', 'r') as file:
@@ -120,4 +117,3 @@ if __name__ == "__main__":
     image = Image.open(BytesIO(image))
     image = image.convert('RGB')
     detect(image)
->>>>>>> 01e5338c073ded73e2bc1364732fda592e4cbff8
