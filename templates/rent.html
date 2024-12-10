@@ -38,8 +38,8 @@
         <div class="camera">
           <video class="webcam" width="50%"></video>
         </div>
-        <div class="ball">Ball-Type</div>
-        <div class="accuracy">Accuracy</div>
+        <div class="ball" id="ball-type">Ball-Type</div>
+        <div class="accuracy" id="accuracy">Accuracy</div>
         <button class="retry" onclick="redirectTo('{{url_for('rent')}}')">Retry</div>
         <button class="confirm" onclick="redirectTo('{{url_for('finalRent')}}')">Confirm</div>
         {% endblock %}

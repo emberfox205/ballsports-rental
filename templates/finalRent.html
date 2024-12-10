@@ -1,5 +1,23 @@
 {% extends "rent.html"%}
 
 {%block content%}
-<h1> For Rent</h1>
+<div class="main-overall-box">
+    <div class="receipt-header">
+        <h1>Confirm your rental</h1>
+        <p class="receipt-warning">Please review all information carefully</p>
+    </div>
+    <div class="transaction-content">
+        <ol class="rental-list">
+            <li>Item: </li>
+            <li>Accuracy: </li>
+            <li>Date: </li>
+            <li>User: </li>
+            <li>Image: </li>
+        </ol>
+        <div class="receipt-button">
+            <button class="detect-retry">Retry</button>
+            <button class="confirm-rent">Confirm and Logout</button>
+        </div>
+    </div>
+</div>
 {%endblock%}

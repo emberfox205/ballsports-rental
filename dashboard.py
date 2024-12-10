@@ -182,7 +182,8 @@ def detect():
             # Check if the count reaches the threshold
             if recognition_data['recognition_count'] >= 5:
                 recognition_data['recognition_count'] = 0
-                return jsonify({'redirect': 'YES'}), 200
+                return jsonify({'redirect': 1}), 200
+
 
         return jsonify({
             'ball_name': recognition_data['ball_name'],
