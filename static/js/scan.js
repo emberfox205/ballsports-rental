@@ -9,8 +9,11 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
   })
   .then((devices) => {
     // Find the integrated camera
+    const keywords = ['integrated', 'built-in', 'internal', 'webcam'];
     const videoDevices = devices.filter(device => device.kind === 'videoinput');
-    const integratedCamera = videoDevices.find(device => device.label.toLowerCase().includes('integrated'));
+    const integratedCamera = videoDevices.find(device => 
+      keywords.some(keyword => device.label.toLowerCase().includes(keyword))
+    );
 
     if (integratedCamera) {
       // Use the device ID of the integrated camera to request the media stream
@@ -50,7 +53,7 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       const imageData = canvas.toDataURL('image/jpg');
 
       // POST Request 
-      fetch('/rent', {
+      fetch('/detect', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -72,7 +75,7 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
 
     // Take snapshots continuously
     // Time interval to be changed
-    setInterval(takeSnapshot, 10000);
+    setInterval(takeSnapshot, 2000);
   })
   .catch((err) => {
     console.error(`${err.name}: ${err.message}`);
