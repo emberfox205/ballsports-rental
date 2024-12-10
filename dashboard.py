@@ -182,10 +182,13 @@ def detect():
                 return jsonify({'redirect': 1}), 200
 
         # Return result regardless the accuracy
-        return jsonify({
-            'ball_name': is_recognized["class_name"],
-            'confidence': is_recognized["confidence"],
-        }), 200
+        if is_recognized:
+            return jsonify({
+                'ball_name': is_recognized["class_name"],
+                'confidence': is_recognized["confidence"],
+            }), 200
+        else:
+            return jsonify({'error': 'Error processing image'}), 400
     else:
         return jsonify({'error': 'Method Not Allowed'}), 405
     
