@@ -17,10 +17,10 @@
     <div class="receipt-buttons">
         <ol class="receipt-buttons-list">
             <li>
-                <button class="finals" id="final-confirm" onclick="redirectTo('{{url_for('logout')}}')">Confirm and Logout</button>
+                <button class="finals" id="final-confirm" onclick="window.location.href='logout'">Confirm and Logout</button>
             </li>
             <li>
-                <button class="finals" id="final-retry" onclick="redirectTo('{{url_for('rent')}}')">Retry</button>
+                <button class="finals" id="final-retry" onclick="window.location.href='dashboard'">Retry</button>
             </li>
         </ol>
     </div>
