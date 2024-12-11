@@ -90,6 +90,11 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
 
     // Redirect on successful detection
     function detectionRedirect() {
+      const accuracy = document.getElementById('ball-type').textContent;
+      const ballType = document.getElementById('accuracy').textContent;
+      
+      localStorage.setItem('ballType', ballType);
+      localStorage.setItem('accuracy', accuracy);
       window.location.href = '/finalRent';
     }
 
