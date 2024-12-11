@@ -19,11 +19,11 @@
                 <h1>Login</h1>
             </div>
             
-            <form action="#" method="post" style="width: 100%"> 
+            <form action="#" method="post" style="width: 100%" onsubmit="storeEmail()"> 
                 <p>
                     <div class="input-icon">
                         <i class="fas fa-user"></i>
-                        <input type="text" name = "email" pattern="^[a-z0-9A-Z.]+@gmail\.com$" placeholder="Enter your email"  required style="border-color: orange; border-radius: 7px;">
+                        <input type="text" id="email" name = "email" pattern="^[a-z0-9A-Z.]+@gmail\.com$" placeholder="Enter your email"  required style="border-color: orange; border-radius: 7px;">
                     </div>
                 </p>
 
@@ -38,6 +38,12 @@
             <p class="option-login" style="position: absolute; bottom:22%; color: grey">OR</p>
             <button class="signUp" onclick="window.location.href='/register'">Sign Up </button>
         </div>
+        <script>
+            function storeEmail() {
+                const email = document.getElementById('email').value;
+                localStorage.setItem('user', email);
+            }
+        </script>
     </div>
 
 {% endblock %}
