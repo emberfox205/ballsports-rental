@@ -7,7 +7,8 @@ import base64
 from io import BytesIO
 from PIL import Image
 from libs.img_handling import process_image, logo_check
-markers = []
+from initialize import initial
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ballstorage.db'
 app.permanent_session_lifetime = timedelta(minutes= 5)
@@ -15,25 +16,32 @@ app.config['SECRET_KEY'] = 'averysecretkey'
 db = SQLAlchemy(app)
 model = tf.keras.models.load_model('model/model.keras', compile=False)
 logo = tf.keras.models.load_model('model/logo.keras', compile=False)
+
+with open("beginning.txt") as f:
+    lines = f.readline()
+    lines = lines.strip()
+    if lines == "0":
+        initial()
+    else:
+        pass
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(100), nullable=False)
-    date = db.Column(db.String(100))
     def __init__(self, email, password, date = None):
         self.email = email
         self.password = password
-        self.date = date if date else datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-class Ball(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(100),nullable = False)
-    sport = db.Column(db.String(50), nullable = False)
-    condition = db.Column(db.String(10), nullable = False)
-    def __init__(self, email, sport, condition):
-        self.email = email
-        self.sport = sport
-        self.condition = condition
+
+def connectDb():
+    try:
+        connect = sqlite3.connect('/instance/ballstorage.db')
+        cur = connect.cursor()
+        return connect,cur
     
+    except sqlite3.Error as e:
+        print(f"An error occurred: {e}")
+
 @app.route("/" , methods = ["POST", "GET"])
 @app.route("/login" , methods = ["POST", "GET"])
 def login():
@@ -97,24 +105,84 @@ def register():
     
 @app.route("/dashboard")
 def dashboard():
-    return render_template("dashboard.html")
+    if "email" in session:
+        return render_template("dashboard.html")
+    else:
+        return redirect(url_for("login"))
+    
 @app.route('/rent')
 def rent():
-    if "email" not in session:
-        return redirect(url_for("login"))
-    return render_template('rent.html')
-
+    if "email" in session:
+        connect, cur = connectDb()
+        gmail = session.get('email')
+        cur.execute("SELECT returned FROM ballRent WHERE email = ? ORDER BY ID DESC LIMIT 1", (gmail,))
+        returned = cur.fetchone()
+        connect.commit()
+        if not returned or returned[0] == 1:
+            return render_template('rent.html')
+        else:
+            return '''
+            <script>
+                window.location.href = '/returnning';
+                alert("Please return the item first.");
+            </script>
+            '''
+    else:
+        return redirect(url_for("login"))   
+    
 @app.route('/returnning')
 def returnning():
-    return render_template('return.html')
-
+    if "email" in session:
+        return render_template('return.html')
+    else:
+        return redirect(url_for("login"))
+    
 @app.route('/finalRent')
 def finalRent():
-    return render_template("finalRent.html")
+    if "email" in session: #and session.get("redirect_flag") == 1: # You can only access this page through redirection, commented for dev purposes
+        return render_template("finalRent.html")
+    else:
+        return redirect(url_for("login"))
+
+@app.route('/confirmRent', methods = ["POST"])
+def confirmRent():
+    data = request.json()
+    if not data or not all(k in data for k in ("ball_name", "confidence", "date")):
+        print("Received Unsuccessfully")
+        return jsonify({'error': 'No data provided'}), 400
+    
+    print("Successfully Received")
+    connect, cur = connectDb()
+    
+    values = [data["ball_name"], data["date"], session.get('email'), 0]
+    cur.execute('''CREATE TABLE IF NOT EXISTS ballRent 
+            (id INTEGER PRIMARY KEY AUTOINCREMENT, ball TEXT, date TEXT, email TEXT, returned INT)''')
+    cur.execute("""INSERT INTO ballRent (ball, date, email, returned) VALUES (?, ?, ?, ?)""", values)
+    connect.commit()
+    connect.close()
+
+@app.route('/confirmReturn', methods = ["POST"])
+def confirmReturn():
+
+    data = request.json()
+    if not data or not all(k in data for k in ("ball_name", "confidence", "date")):
+        print("Received Unsuccessfully")
+        return jsonify({'error': 'No data provided'}), 400
+    
+    print("Successfully Received")
+    connect, cur = connectDb()
+    cur.execute("""UPDATE ballRent SET returned = ? WHERE ball = ? AND email = ?""", 
+                    (1, data["ball_name"], session.get('email')))
+    connect.commit()
+    connect.close()
+
 @app.route('/finalReturn')
 def finalReturn():
-    return render_template("finalReturn.html")
-
+    if "email" in session: #and session.get("redirect_flag") == 1: # You can only access this page through redirection, commented for dev purposes
+        return render_template("finalReturn.html")
+    else:
+        return redirect(url_for("login"))
+    
 @app.route("/detect", methods=["POST", "GET"])
 def detect():
     if request.method == "POST":
@@ -192,9 +260,11 @@ def detect():
     else:
         return jsonify({'error': 'Method Not Allowed'}), 405
     
-  
+
+
 if __name__ == "__main__":          
     with app.app_context():
+        
         db.create_all()
     # cert goes before private key
     app.run(host="0.0.0.0", port=8080, debug=True, ssl_context=("certs/certificate.crt", "certs/private.key"))
