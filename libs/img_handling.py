@@ -10,6 +10,10 @@ class_names = [
     'tennis_ball',
     'volleyball'
 ]
+class_logo_names = [
+    'empty',
+    'with_logo'
+]
 
 def preprocess_image(img, target_size=(224, 224)):
     """Load and preprocess an image for model prediction."""
@@ -43,6 +47,23 @@ def process_image(model, img) -> dict:
         print(f"Error processing image: {str(e)}")
         return None
 
-
+def logo_check(model, img) -> dict:
+    try:
+        pil_img = img
+        preprocessed_img = preprocess_image(pil_img)
+        predictions = model.predict(preprocessed_img)
+        predicted_class_idx = np.argmax(predictions[0])
+        confidence = predictions[0][predicted_class_idx]
+        print({
+            'class_name': class_logo_names[predicted_class_idx],
+            'confidence': float(confidence)})
+        if class_logo_names[predicted_class_idx] == 'with_logo' and confidence >= 0.8:
+            return "logo"
+        else:
+            None
+        
+    except Exception as e:
+        print(f"Error processing image: {str(e)}")
+        return None
 
 

@@ -4,6 +4,7 @@ from PIL import Image
 import cv2, base64
 from flask import jsonify 
 from io import BytesIO
+import time
 class_names = [
     'american_football',
     'baseball',
@@ -13,12 +14,17 @@ class_names = [
     'tennis_ball',
     'volleyball'
 ]
+class_logo_names = [
+    'empty',
+    'with_logo'
+]
 model = tf.keras.models.load_model('model/model.keras', compile=False)
+logo = tf.keras.models.load_model('model/logo.keras', compile=False)
 recognition_data =  {
-        'ball_name': None,  
-        'accuracy': None,
-        'recognition_count': 0  
-    }
+    'ball_name': None,  
+    'accuracy': None,
+    'recognition_count': 0  
+}
 
 
 def preprocess_image(img, target_size=(224, 224)):
@@ -51,15 +57,32 @@ def process_image(model, img) -> dict:
         print(f"Error processing image: {str(e)}")
         return None
 
-
+def logo_check(model, img) -> dict:
+    try:
+        pil_img = img
+        preprocessed_img = preprocess_image(pil_img)
+        predictions = model.predict(preprocessed_img)
+        predicted_class_idx = np.argmax(predictions[0])
+        confidence = predictions[0][predicted_class_idx]
+        print({
+            'class_name': class_logo_names[predicted_class_idx],
+            'confidence': float(confidence)})
+        return {'class_name': class_logo_names[predicted_class_idx],'confidence': float(confidence)}
+        
+    except Exception as e:
+        print(f"Error processing image: {str(e)}")
+        return None
 
 
 
 
 def detect(image):
 
+    start_time = time.time()
     is_recognized = process_image(model, image)  # return dict {"class_name": ,"confidence": }
-
+    have_logo = logo_check(logo, image)
+    logo_check_time = time.time() - start_time
+    print(f"Time taken for: {logo_check_time} seconds")
 
     if is_recognized:
         
@@ -111,8 +134,6 @@ if __name__ == "__main__":
     with open('recognized_ball.txt', 'r') as file:
         image = file.read()
     image = image.split(',')[1]
-    with open('ball.txt', 'w') as f:
-            f.write(f"{image}")
     image = base64.b64decode(image)  # Skip the data URI prefix, idk what this is
     image = Image.open(BytesIO(image))
     image = image.convert('RGB')
