@@ -8,16 +8,23 @@
     </div>
     <div class="receipt-content">
         <ol class="rental-list">
-            <li>Item: <div class="receipt-text-item" id="object"></div></li>
-            <li>Accuracy: <div class="receipt-text-item" id="accuracy"></div></li>
-            <li>Date: <div class="receipt-text-item" id="date"></div></li>
-            <li>User: <div class="receipt-text-item" id="user"></div></li>
+            <li>Item: <div class="receipt-text-item" id="object">N/A</div></li>
+            <li>Accuracy: <div class="receipt-text-item" id="accuracy">N/A</div></li>
+            <li>Date: <div class="receipt-text-item" id="date">N/A</div></li>
+            <li>User: <div class="receipt-text-item" id="user">N/A</div></li>
             <li>Image: <div class="receipt-img-item" id="obj-img"><img src""></div></li>
         </ol>
     </div>
     <div class="receipt-buttons">
-        <button class="final-confirm" onclick="redirectTo('{{url_for('logout')}}')">Confirm and Logout</button>
-        <button class="final-retry" onclick="redirectTo('{{url_for('rent')}}')">Retry</button>
+        <ol class="receipt-buttons-list">
+            <li>
+                <button class="finals" id="final-confirm" onclick="redirectTo('{{url_for('logout')}}')">Confirm and Logout</button>
+            </li>
+            <li>
+                <button class="finals" id="final-retry" onclick="redirectTo('{{url_for('rent')}}')">Retry</button>
+            </li>
+        </ol>
     </div>
+    <script src="{{url_for('static', filename = 'js/receiptRent.js') }}"></script>
 </div>
 {%endblock%}
