@@ -65,7 +65,8 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
           detectionRedirect();
         }
         else if ('ball_name' in data) {
-          updateDetection(data);
+          updateBallDetection(data);
+          updateStatusDetection(data);
         };
       })
       .catch((error) => {
@@ -73,8 +74,29 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       })
     }
 
+    // Update status of both ball and logo detection: 
+    function updateStatusDetection(detectionResponse) {
+      var ballStatus = detectionResponse.ball_name || "None";
+      var logoStatus = detectionResponse.logo_flag;
+      var accuracy = detectionResponse.confidence || 0
+
+      if (ballStatus != "None" && accuracy > 0.85) {
+        document.getElementById('ball-status').textContent = "✅ Item detected";
+      }
+      else {
+        document.getElementById('ball-status').textContent = "⚪ Detecting item";
+      }
+
+      if (logoStatus != 0) {
+        document.getElementById('logo-status').textContent = "✅ Logo detected";
+      }
+      else {
+        document.getElementById('logo-status').textContent = "⚪ Detecting logo";
+      }
+    }
+
     // Update components on /rent with response data
-    function updateDetection(detectionResponse) {
+    function updateBallDetection(detectionResponse) {
       var ballType = detectionResponse.ball_name || "Unknown";
       var accuracy = detectionResponse.confidence || "N/A";
       
@@ -104,8 +126,8 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
     // Redirect on successful detection
     // Add data to local storage to be redisplayed to the Confirmation page 
     function detectionRedirect() {
-      const accuracy = document.getElementById('ball-type').textContent;
-      const ballType = document.getElementById('accuracy').textContent;
+      const ballType = document.getElementById('ball-type').textContent;
+      const accuracy = document.getElementById('accuracy').textContent;
       
       localStorage.setItem('ballType', ballType);
       localStorage.setItem('accuracy', accuracy);
