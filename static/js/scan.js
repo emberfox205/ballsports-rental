@@ -61,27 +61,29 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       .then(response => response.json())
       .then(data => {
         console.log(data);
-        if ('ball_name' in data && 'confidence' in data) {
-          updateDetection(data);
-        }
-        else if ('redirect' in data) {
+        if ('redirect' in data) {
           detectionRedirect();
+        }
+        else if ('ball_name' in data) {
+          updateDetection(data);
         };
       })
       .catch((error) => {
         console.error('Error: ', error);
-      });
+      })
     }
 
     // Update components on /rent with response data
     function updateDetection(detectionResponse) {
       var ballType = detectionResponse.ball_name || "Unknown";
       var accuracy = detectionResponse.confidence || "N/A";
-
+      
+      // Round accuracy 
       if (typeof accuracy === 'number') {
         accuracy = accuracy.toFixed(4);
       }
 
+      // Modify HTML elements based on response
       document.getElementById('ball-type').textContent = ballType;
       document.getElementById('accuracy').textContent = accuracy;
     }
@@ -89,7 +91,7 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
     // Redirect on successful detection
     function detectionRedirect() {
       window.location.href = '/finalRent';
-      }
+    }
 
     // Call snapshot function 
     takeSnapshot();

@@ -1,0 +1,69 @@
+.rent-title {
+    font-size: xx-large;
+}
+
+.main-overall-box {
+    border-radius: 20px;
+    border: 5px solid black;
+    background-color: white;
+    padding: 1em 3em;
+    z-index: 1;
+}
+
+.receipt-header {
+    text-align: left;
+}
+
+.receipt-content {
+    border-radius: 18px;
+    text-align: left;
+    padding: 4%;
+    background-color: lightgrey;
+    z-index: 2;
+    margin-bottom: 10px;
+}
+
+.receipt-warning {
+    color: darkgray;
+}
+
+.rental-list, 
+.receipt-buttons-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.rental-list li {
+    border-bottom: 1px solid gray;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+
+.rental-list li :last-child {
+    border-bottom: none;
+}
+
+.receipt-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.receipt-buttons-list :first-child {
+    margin-bottom: 5px;
+}
+
+.finals {
+    width: 200px;
+    height: 40px;
+    border-radius: 10px;
+}
+
+#final-retry {
+    background-color: rgb(223, 76, 76);
+}
+
+#final-confirm {
+    background-color: rgb(64, 122, 224);
+}
+
