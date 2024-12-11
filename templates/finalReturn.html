@@ -1,5 +1,29 @@
-{% extends "rent.html"%}
+{% extends "finalRent.html"%}
 
 {%block content%}
-<h1> Payment</h1>
+<div class="main-overall-box">
+    <div class="receipt-header">
+        <h1 class="rent-title">Confirm your Payment</h1>
+        <p class="receipt-warning">Please review all information carefully</p>
+    </div>
+    <div class="receipt-content">
+        <ol class="rental-list">
+            <li>Item: <div class="receipt-text-item" id="object">N/A</div></li>
+            <li>Accuracy: <div class="receipt-text-item" id="accuracy">N/A</div></li>
+            <li>Date: <div class="receipt-text-item" id="date">N/A</div></li>
+            <li>User: <div class="receipt-text-item" id="user">N/A</div></li>
+            <li>Cost: <div class="receipt-text-item" id="cost">N/A</div></li>
+        </ol>
+    </div>
+    <div class="receipt-buttons">
+        <ol class="receipt-buttons-list">
+            <li>
+                <button class="finals" id="final-confirm" onclick="window.location.href='logout'">Confirm and Logout</button>
+            </li>
+            <li>
+                <button class="finals" id="final-retry" onclick="window.location.href='dashboard'">Retry</button>
+            </li>
+        </ol>
+    </div>
+    <script src="{{url_for('static', filename = 'js/receiptRent.js') }}"></script>
 {%endblock%}

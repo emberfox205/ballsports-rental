@@ -1,15 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <div class="background"></div>
     
     <div class="login-container">
-        <div class="login">
-            <div class="title_login">Welcome!</div>
-            <form action="#" method="post"> 
-                <p>Email: <input type="text" name = "email" pattern="^[a-z0-9A-Z.]+@gmail\.com$" placeholder="Enter your email" required></p>
-                <p>Password: <input type="password" name = "password" placeholder="Enter your password" required></p>     
-                {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages() %}
                     {% if messages %}
                         <div class="flash-messages">
                             {% for msg in messages %}
@@ -17,10 +13,30 @@
                             {% endfor %}
                         </div>
                     {% endif %}
-                {% endwith %}
-                <p><input type="submit" value="Login" class="button" id="log-gister"></p>
-                <a href="/register">Don't have an account? Register here!</a>
+        {% endwith %}
+        <div class="login">
+            <div class="title_login">Welcome!
+                <h1>Login</h1>
+            </div>
+            
+            <form action="#" method="post" style="width: 100%"> 
+                <p>
+                    <div class="input-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" name = "email" pattern="^[a-z0-9A-Z.]+@gmail\.com$" placeholder="Enter your email"  required style="border-color: orange; border-radius: 7px;">
+                    </div>
+                </p>
+
+                <p>
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" name = "password" placeholder="Enter your password" required style="border-color: orange;  border-radius: 7px;"> 
+                    </div> 
+                </p>    
+                <p><input type="submit" value="Enter" class="button" id="log-gister"></p>
             </form> 
+            <p class="option-login" style="position: absolute; bottom:22%; color: grey">OR</p>
+            <button class="signUp" onclick="window.location.href='/register'">Sign Up </button>
         </div>
     </div>
 

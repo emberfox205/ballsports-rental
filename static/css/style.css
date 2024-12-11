@@ -1,5 +1,5 @@
 body{
-    background-color: grey;
+    background-color: #e4a94f;
 }
 .background {
     display: flex;
@@ -8,10 +8,7 @@ body{
     height: 100%;
     top: 0;
     left: 0;
-    background-image: url('blue.jpg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
+    background-color: #FFB441;
     background-size: cover; /* Ensures the background image covers the entire page */
     z-index: -1;
   }
@@ -69,8 +66,8 @@ body{
 }
 
 .box:hover {
-    background-color: rgb(73, 167, 73); /* Change background color on hover */
-    color: white; /* Change text color on hover */
+    background-color: rgb(200, 197, 197); /* Change background color on hover */
+    color: black; /* Change text color on hover */
 }
 
 .webcam

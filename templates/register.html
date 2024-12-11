@@ -1,24 +1,39 @@
 {% extends "base.html" %}
-{% block content %}
 
+{% block content %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <div class="background"></div>
     
     <div class="login-container">
-        <div class="login">
-            <div class="title_login">Register</div>
-            <form action="#" method="post"> 
-                <p>Email: <input type="email" name = "email" pattern="^[a-z0-9A-Z.]+@gmail\.com$" placeholder="Enter your email" required></p>
-                <p>Password: <input type="password" name = "password" placeholder="Enter your password" ></p>     
-                {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages() %}
                     {% if messages %}
                         <div class="flash-messages">
                             {% for msg in messages %}
-                                <p class="flash-message">{{msg}}</p>
+                                <p class="flash_message">{{msg}}</p>
                             {% endfor %}
                         </div>
                     {% endif %}
-                {% endwith %}
-                <p><input type="submit" value="Register" class="button" id="log-gister"></p>
+        {% endwith %}
+        <div class="login">
+            <div class="title_login">Welcome!
+                <h1>Sign Up</h1>
+            </div>
+            
+            <form action="#" method="post" style="width: 100%"> 
+                <p>
+                    <div class="input-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" name = "email" pattern="^[a-z0-9A-Z.]+@gmail\.com$" placeholder="Enter your email"  required style="border-color: orange; border-radius: 7px;">
+                    </div>
+                </p>
+
+                <p>
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" name = "password" placeholder="Enter your password" required style="border-color: orange;  border-radius: 7px;"> 
+                    </div> 
+                </p>    
+                <p><input type="submit" value="Enter" class="button" id="log-gister" style="width:100%; right:0%;"></p>
             </form> 
         </div>
     </div>
