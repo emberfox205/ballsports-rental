@@ -100,10 +100,14 @@ def dashboard():
     return render_template("dashboard.html")
 @app.route('/rent')
 def rent():
+    if "email" not in session:
+        return redirect(url_for("login"))
     return render_template('rent.html')
+
 @app.route('/returnning')
 def returnning():
     return render_template('return.html')
+
 @app.route('/finalRent')
 def finalRent():
     return render_template("finalRent.html")

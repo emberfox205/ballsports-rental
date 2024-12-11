@@ -1,50 +1,51 @@
 <!DOCTYPE html>
 <html lang = "en">
     <head>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-            <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
-            <a class="navbar-brand" href="#">Library(Ball)</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+        <a class="navbar-brand" href="#">Library(Ball)</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 
-                    <a class="nav-item nav-link active" href="/dashboard">
-                        <img src="{{ url_for('static', filename='icons/home.png') }}" width="20" height="20" class="d-inline-block align-top" alt="">
-                        Home <span class="sr-only">(current)</span>
-                    </a>
-                    <div class="navbar-nav ml-auto">
-                    <a class="nav-item nav-link ml-auto" href="/logout">
-                        <img src="{{ url_for('static', filename='icons/logout.png') }}" width="20" height="20" class="d-inline-block align-top" alt="">
-                        Logout
-                    </a>
-                    
-                    </div>
+                <a class="nav-item nav-link active" href="/dashboard">
+                    <img src="{{ url_for('static', filename='icons/home.png') }}" width="20" height="20" class="d-inline-block align-top" alt="">
+                    Home <span class="sr-only">(current)</span>
+                </a>
+                <div class="navbar-nav ml-auto">
+                <a class="nav-item nav-link ml-auto" href="/logout">
+                    <img src="{{ url_for('static', filename='icons/logout.png') }}" width="20" height="20" class="d-inline-block align-top" alt="">
+                    Logout
+                </a>
+                
+              </div>
             </div>
-          </nav>
+      </nav>
         <meta charset = "UTF-8">
         <title> Ball Library </title>
-        <link rel = "stylesheet" href="{{url_for('static', filename = 'css/style.css')}}">
+        <link rel = "stylesheet" href="{{url_for('static', filename = 'css/rent.css')}}">
         <link rel = "stylesheet" href="{{url_for('static', filename = 'css/receipt.css')}}">
     </head>
     <script>
-      function redirectTo(page) {
-        window.location.href = page;
+      function goBack() {
+          window.history.back();
       }
-    </script>  
+    </script>
     <body>
-      <div class="scan-container">
-        {% block content %}
-        <div class="camera">
-          <video class="webcam" width="50%"></video>
-        </div>
-        <div class="ball" id="ball-type">Ball-Type</div>
-        <div class="accuracy" id="accuracy">Accuracy</div>
-        <button class="retry" onclick="redirectTo('{{url_for('rent')}}')">Retry</div>
-        <button class="confirm" onclick="redirectTo('{{url_for('finalRent')}}')">Confirm</div>
-        {% endblock %}
-      </div>  
+      {%block content%}
       <script src="{{url_for('static', filename = 'js/scan.js') }}"></script>
+      
+          <div class="scanContainer">
+            <div class="camera">
+              <video class="webcam"></video>
+            </div>
+            <div class="accuracy" id="accuracy">Accuracy</div>
+            <div class="ball" id="ball-type">Ball-Type</div>
+            <button class="back" onclick="goBack()">Back</button>
+          </div>
+          
+      {%endblock%}
     </body>
 </html>

@@ -86,7 +86,20 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       // Modify HTML elements based on response
       document.getElementById('ball-type').textContent = ballType;
       document.getElementById('accuracy').textContent = accuracy;
+    
+      var accuracyElement = document.getElementById('accuracy');
+      var accuracyValue = parseFloat(accuracy);
+    
+      if (accuracyValue > 0.85) {
+        accuracyElement.style.backgroundColor = '#39FF14';
+        accuracyElement.style.color = 'red';
+      } else {
+        accuracyElement.style.backgroundColor = 'red'; // Reset to default if needed
+        accuracyElement.style.color = 'yellow';
+      }
     }
+    
+
 
     // Redirect on successful detection
     // Add data to local storage to be redisplayed to the Confirmation page 
