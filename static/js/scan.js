@@ -89,6 +89,7 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
     }
 
     // Redirect on successful detection
+    // Add data to local storage to be redisplayed to the Confirmation page 
     function detectionRedirect() {
       const accuracy = document.getElementById('ball-type').textContent;
       const ballType = document.getElementById('accuracy').textContent;
@@ -103,7 +104,7 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
 
     // Take snapshots continuously
     // Time interval to be changed
-    setInterval(takeSnapshot, 3000);
+    setInterval(takeSnapshot, 1000);
   })
   .catch((err) => {
     console.error(`${err.name}: ${err.message}`);
