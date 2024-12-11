@@ -3,21 +3,21 @@
 {%block content%}
 <div class="main-overall-box">
     <div class="receipt-header">
-        <h1>Confirm your rental</h1>
+        <h1 class="rent-title">Confirm your rental</h1>
         <p class="receipt-warning">Please review all information carefully</p>
     </div>
-    <div class="transaction-content">
+    <div class="receipt-content">
         <ol class="rental-list">
-            <li>Item: </li>
-            <li>Accuracy: </li>
-            <li>Date: </li>
-            <li>User: </li>
-            <li>Image: </li>
+            <li>Item: <div class="receipt-text-item" id="object"></div></li>
+            <li>Accuracy: <div class="receipt-text-item" id="accuracy"></div></li>
+            <li>Date: <div class="receipt-text-item" id="date"></div></li>
+            <li>User: <div class="receipt-text-item" id="user"></div></li>
+            <li>Image: <div class="receipt-img-item" id="obj-img"><img src""></div></li>
         </ol>
-        <div class="receipt-button">
-            <button class="detect-retry">Retry</button>
-            <button class="confirm-rent">Confirm and Logout</button>
-        </div>
+    </div>
+    <div class="receipt-buttons">
+        <button class="final-confirm" onclick="redirectTo('{{url_for('logout')}}')">Confirm and Logout</button>
+        <button class="final-retry" onclick="redirectTo('{{url_for('rent')}}')">Retry</button>
     </div>
 </div>
 {%endblock%}

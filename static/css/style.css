@@ -181,11 +181,15 @@ body{
     font-weight: bold; 
 }
 
+.rent-title {
+    font-size: xx-large;
+}
+
 .main-overall-box {
+    border-radius: 20px;
     border: 5px solid black;
     background-color: white;
-    padding: 5% ;
-    padding-block-start: 5%;
+    padding: 4% 4%;
     z-index: 1;
 }
 
@@ -194,10 +198,12 @@ body{
 }
 
 .receipt-content {
+    border-radius: 18px;
     text-align: left;
-    padding: 6%;
-    background-color: grey;
+    padding: 4%;
+    background-color: lightgrey;
     z-index: 2;
+    margin-bottom: 10px;
 }
 
 .receipt-warning {
@@ -209,6 +215,29 @@ body{
     padding-left: 0;
 }
 
-.receipt-button {
+.rental-list li {
+    border-bottom: 1px solid gray;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+
+.rental-list li :last-child {
+    border-bottom: none;
+}
+
+.receipt-buttons {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.final-retry {
+    width: 180px;
+    height: 40px;
+}
+
+.final-confirm {
+    width: 180px;
+    height: 40px;
 }
