@@ -47,7 +47,7 @@ def process_image(model, img) -> dict:
 def logo_check(model, img) -> dict:
     try:
         pil_img = img
-        preprocessed_img = preprocess_image(pil_img)
+        preprocessed_img = preprocess_image(pil_img, target_size=(160, 160))
         predictions = model.predict(preprocessed_img)
         predicted_class_idx = np.argmax(predictions[0])
         confidence = predictions[0][predicted_class_idx]
