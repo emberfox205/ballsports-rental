@@ -140,17 +140,18 @@ def returnning():
         cur.execute("SELECT returned FROM ballRent WHERE email = ? ORDER BY ID DESC LIMIT 1", (gmail,))
         returned = cur.fetchone()
         connect.commit()
-        if returned[0] == 0:
-            return render_template('return.html')
-        else:
+
+        if returned is None or returned[0] == 1:
             return '''
             <script>
                 window.location.href = '/rent';
                 alert("You have nothing to return.");
             </script>
             '''
-    else:
-        return redirect(url_for("login"))  
+        elif returned[0] == 0:
+            return render_template('return.html')
+        else:
+            return redirect(url_for("login"))
     
 @app.route('/finalRent')
 def finalRent():
@@ -360,7 +361,7 @@ def detectReturn():
             return jsonify({
                 'ball_name': is_recognized["class_name"],
                 'confidence': is_recognized["confidence"]
-                #,'logo_flag': is_recognized["logo_flag"]
+                ,'logo_flag': is_recognized["logo_flag"]
             }), 200
         else:
             return jsonify({'error': 'Error processing image'}), 400
