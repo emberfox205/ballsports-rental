@@ -29,6 +29,14 @@
         <link rel = "stylesheet" href="{{url_for('static', filename = 'css/receipt.css')}}">
     </head>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('showAlert') === 'true') {
+                alert('! Please return the item first !');
+                localStorage.removeItem('showAlert');
+            }
+        });
+    </script>
+    <script>
       function goBack() {
           window.history.back();
       }
