@@ -1,3 +1,6 @@
+// Define the endpoint to send data towards
+var endpoint;
+
 // Request access to media devices to prompt for permissions
 navigator.mediaDevices.getUserMedia({ video: true, audio: false })
   .then((stream) => {
@@ -52,9 +55,9 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       // Find endpoint to send data towards
       var subpage = window.location.pathname;
       if (subpage === "/rent") {
-        var endpoint = '/detect'
+        endpoint = '/detect'
       } else if (subpage === '/returnning') {
-        var endpoint = '/detectReturn'
+        endpoint = '/detectReturn'
       }
 
       // POST Request 
