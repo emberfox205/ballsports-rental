@@ -13,7 +13,7 @@ def initial():
     ]
 
     # Correct the file path
-    db_path = r'/instance/ballstorage.db'
+    db_path = r'instance/ballstorage.db'
 
     # Check if the directory exists
     if not os.path.exists(os.path.dirname(db_path)):

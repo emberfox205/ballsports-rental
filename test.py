@@ -26,7 +26,7 @@ def returnconf():
     connect.commit()
 
 # Correct the file path
-db_path = r'/instance/ballstorage.db'
+db_path = r'instance/ballstorage.db'
 
 # Check if the directory exists
 if not os.path.exists(os.path.dirname(db_path)):
@@ -40,6 +40,7 @@ try:
     cur.execute('''CREATE TABLE IF NOT EXISTS ballRent 
             (id INTEGER PRIMARY KEY AUTOINCREMENT, ball TEXT, date TEXT, email TEXT, returned INT)''')
     rentconf()
+    returnconf()
     connect.commit()
 
     
