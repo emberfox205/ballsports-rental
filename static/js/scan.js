@@ -49,8 +49,16 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       // Convert the image to Base64
       const imageData = canvas.toDataURL('image/jpg');
 
+      // Find endpoint to send data towards
+      var subpage = window.location.pathname;
+      if (subpage === "/rent") {
+        var endpoint = '/detect'
+      } else if (subpage === '/returnning') {
+        var endpoint = '/detectReturn'
+      }
+
       // POST Request 
-      fetch('/detect', {
+      fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -131,7 +139,13 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       
       localStorage.setItem('ballType', ballType);
       localStorage.setItem('accuracy', accuracy);
-      window.location.href = '/finalRent';
+      // Redirect based on what the current functionality is
+      if (endpoint === '/detect') {
+        window.location.href = '/finalRent';
+      }
+      else {
+        window.location.href = '/finalReturn'
+      }
     }
 
     // Call snapshot function 

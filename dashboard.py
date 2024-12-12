@@ -185,7 +185,7 @@ def detect():
             return jsonify({
                 'ball_name': is_recognized["class_name"],
                 'confidence': is_recognized["confidence"]
-                #,'logo_flag': is_recognized["logo_flag"]
+                ,'logo_flag': is_recognized["logo_flag"]
             }), 200
         else:
             return jsonify({'error': 'Error processing image'}), 400
