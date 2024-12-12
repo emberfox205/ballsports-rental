@@ -202,6 +202,7 @@ def finalReturn():
 @app.route("/detect", methods=["POST", "GET"])
 def detect():
     if request.method == "POST":
+        
        # Create a dict in the session to store the recognized ball, accuracy and recognition count  
         if 'recognition_data' not in session:
            session['recognition_data'] = {
@@ -311,40 +312,51 @@ def detectReturn():
         recognition_data = session['recognition_data']
         print(f"Repeated {recognition_data['recognition_count']} times.")
         
-        if is_recognized and is_recognized["confidence"] > 0.85 :
+        if is_recognized and is_recognized["confidence"] > 0.70:
             check_logo = logo_check(logo, image)
-            # First recognition with logo
-            if recognition_data['ball_name'] is None and check_logo:
-                recognition_data['ball_name'] = is_recognized["class_name"]
-                recognition_data['confidence'] = is_recognized["confidence"]
-                recognition_data['recognition_count'] = 1
-                is_recognized["logo_flag"] = 1
-            
-            # If next recognition produce same result with logo
-            elif recognition_data['ball_name'] == is_recognized["class_name"] and check_logo:
-                # Increment count if the same face is recognized
-                recognition_data['confidence'] = is_recognized["confidence"]
-                recognition_data['recognition_count'] += 1
-                is_recognized["logo_flag"] = 1
-            
-            # Reset if different result is detected with logo
-            elif recognition_data['ball_name'] != is_recognized["class_name"] and check_logo:
-                recognition_data['ball_name'] = is_recognized["class_name"]
-                recognition_data['confidence'] = is_recognized["confidence"]
-                recognition_data['recognition_count'] = 1
-                is_recognized["logo_flag"] = 1
-                # Reset if no logo is detected
-            elif not check_logo:
-                recognition_data['recognition_count'] = 0
+            connect, curr = connectDb()
+            curr.execute("select ball from ballRent ")
+            gmail = session.get('email')
+            curr.execute("SELECT ball FROM ballRent WHERE email = ? ORDER BY ID DESC LIMIT 1", (gmail,))
+            rentedBall = curr.fetchone()
+            connect.commit()
+            if rentedBall and rentedBall[0] == is_recognized["class_name"]:
+                print("YESSSS")
+                # First recognition with logo
+                if recognition_data['ball_name'] is None and check_logo:
+                    recognition_data['ball_name'] = is_recognized["class_name"]
+                    recognition_data['confidence'] = is_recognized["confidence"]
+                    recognition_data['recognition_count'] = 1
+                    is_recognized["logo_flag"] = 1
                 
-            session.modified = True  # Mark session as modified
-            # Check if the count reaches the threshold
-            if recognition_data['recognition_count'] >= 3:
-                recognition_data['recognition_count'] = 0
-                return jsonify({'redirect': 1}), 200
-        # Return result regardless the accuracy
+                # If next recognition produce same result with logo
+                elif recognition_data['ball_name'] == is_recognized["class_name"] and check_logo:
+                    # Increment count if the same ball is recognized
+                    recognition_data['confidence'] = is_recognized["confidence"]
+                    recognition_data['recognition_count'] += 1
+                    is_recognized["logo_flag"] = 1
+                
+                # Reset if different result is detected with logo
+                elif recognition_data['ball_name'] != is_recognized["class_name"] and check_logo:
+                    recognition_data['ball_name'] = is_recognized["class_name"]
+                    recognition_data['confidence'] = is_recognized["confidence"]
+                    recognition_data['recognition_count'] = 1
+                    is_recognized["logo_flag"] = 1
+                    # Reset if no logo is detected
+                elif not check_logo:
+                    recognition_data['recognition_count'] = 0
+                    
+                session.modified = True  # Mark session as modified
+                # Check if the count reaches the threshold
+                if recognition_data['recognition_count'] >= 3:
+                    recognition_data['recognition_count'] = 0
+                    return jsonify({'redirect': 1}), 200
+            else:
+                is_recognized["class_name"] = "Not Rented Ball"
+            
+            # Return result regardless the accuracy
         if is_recognized:
-            print( is_recognized["logo_flag"])
+            print(is_recognized["logo_flag"])
             return jsonify({
                 'ball_name': is_recognized["class_name"],
                 'confidence': is_recognized["confidence"]

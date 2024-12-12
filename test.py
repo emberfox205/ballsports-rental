@@ -12,7 +12,7 @@ class_names = [
     'volleyball'
 ]
 session = {"email" : "vguhoangvu@gmail.com"}
-data = {"ball_name": "pickled balled", "date": "11/12/2024" }
+data = {"ball_name": "basketball", "date": "11/12/2024" }
 data2 = {"ball_name": "pickled balled", "date": "56/22/3030" }
 def rentconf():
     values = [data["ball_name"], data["date"], session['email'], 0]
@@ -22,7 +22,7 @@ def rentconf():
     connect.commit()
 def returnconf():
     cur.execute("""UPDATE ballRent SET returned = ? WHERE ball = ? AND email = ?""", 
-                    (1, data2["ball_name"], session['email']))
+                    (1, data["ball_name"], session['email']))
     connect.commit()
 
 # Correct the file path
@@ -40,7 +40,6 @@ try:
     cur.execute('''CREATE TABLE IF NOT EXISTS ballRent 
             (id INTEGER PRIMARY KEY AUTOINCREMENT, ball TEXT, date TEXT, email TEXT, returned INT)''')
     rentconf()
-    returnconf()
     connect.commit()
 
     
