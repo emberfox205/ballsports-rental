@@ -125,8 +125,8 @@ def rent():
         else:
             return '''
             <script>
+                localStorage.setItem('showAlert', 'true');
                 window.location.href = '/returnning';
-                alert("Please return the item first.");
             </script>
             '''
     else:
@@ -145,8 +145,8 @@ def returnning():
         else:
             return '''
             <script>
+                localStorage.setItem('showAlert', 'true');
                 window.location.href = '/rent';
-                alert("You have nothing to return.");
             </script>
             '''
     else:
