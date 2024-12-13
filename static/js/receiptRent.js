@@ -34,6 +34,11 @@ function sendRentInfo() {
     })
 }
 
+function logOut() {
+    sendRentInfo();
+    window.location.href='logout';
+}
+
 // Call function on DOM load
 document.addEventListener('DOMContentLoaded', function() {
     retrieveDetection();
