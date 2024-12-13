@@ -58,7 +58,7 @@ def login():
         if found_user:
             
             if password == found_user.password:
-                return redirect(url_for('dashboard'))
+                return render_template("dashboard.html")
             else:
                 flash("Please type the correct PASSWORD !")
                 session.pop("email",None)
@@ -111,7 +111,13 @@ def dashboard():
         return render_template("dashboard.html")
     else:
         return redirect(url_for("login"))
-    
+@app.route('/rentPage')
+def rentPage():
+    if "email" in session:
+        return render_template("rent.html")
+    else:
+        return redirect(url_for("login"))
+
 @app.route('/rent')
 def rent():
     if "email" in session:
@@ -121,17 +127,19 @@ def rent():
         returned = cur.fetchone()
         connect.commit()
         if not returned or returned[0] == 1:
-            return render_template('rent.html')
+            return jsonify(redirect=url_for('rentPage'))
         else:
-            return '''
-            <script>
-                window.location.href = '/returnning';
-                alert("Please return the item first.");
-            </script>
-            '''
+            return jsonify(alert="Please return the item first.")
     else:
-        return redirect(url_for("login"))   
-    
+        return redirect(url_for('login'))
+
+@app.route('/renturnPage')
+def returnPage():
+    if "email" in session:
+        return render_template("return.html")
+    else:
+        return redirect(url_for("login"))
+  
 @app.route('/returnning')
 def returnning():
     if "email" in session:
@@ -141,16 +149,11 @@ def returnning():
         returned = cur.fetchone()
         connect.commit()
         if returned[0] == 0:
-            return render_template('return.html')
+            return jsonify(redirect=url_for('returnPage'))
         else:
-            return '''
-            <script>
-                window.location.href = '/rent';
-                alert("You have nothing to return.");
-            </script>
-            '''
+            return jsonify(alert="Rent something first.")
     else:
-        return redirect(url_for("login"))  
+        return redirect(url_for('login'))
     
 @app.route('/finalRent')
 def finalRent():
@@ -272,7 +275,7 @@ def detect():
             return jsonify({
                 'ball_name': is_recognized["class_name"],
                 'confidence': is_recognized["confidence"]
-                #,'logo_flag': is_recognized["logo_flag"]
+                ,'logo_flag': is_recognized["logo_flag"]
             }), 200
         else:
             return jsonify({'error': 'Error processing image'}), 400
