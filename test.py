@@ -39,7 +39,6 @@ try:
 
     cur.execute('''CREATE TABLE IF NOT EXISTS ballRent 
             (id INTEGER PRIMARY KEY AUTOINCREMENT, ball TEXT, date TEXT, email TEXT, returned INT)''')
-    returnconf()
     connect.commit()
 
     

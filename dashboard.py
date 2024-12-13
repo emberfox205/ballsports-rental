@@ -100,7 +100,6 @@ def register():
             account = User(email=email, password=password)
             db.session.add(account)
             db.session.commit()
-            flash("User created successfully!")
             return redirect(url_for("login"))
     else:
         return render_template("register.html")
@@ -148,10 +147,10 @@ def returnning():
         cur.execute("SELECT returned FROM ballRent WHERE email = ? ORDER BY ID DESC LIMIT 1", (gmail,))
         returned = cur.fetchone()
         connect.commit()
-        if returned[0] == 0:
-            return jsonify(redirect=url_for('returnPage'))
-        else:
+        if returned is None or returned[0] == 1:
             return jsonify(alert="Rent something first.")
+        elif returned[0] == 0:
+            return jsonify(redirect=url_for('returnPage'))
     else:
         return redirect(url_for('login'))
     
@@ -363,7 +362,7 @@ def detectReturn():
             return jsonify({
                 'ball_name': is_recognized["class_name"],
                 'confidence': is_recognized["confidence"]
-                #,'logo_flag': is_recognized["logo_flag"]
+                ,'logo_flag': is_recognized["logo_flag"]
             }), 200
         else:
             return jsonify({'error': 'Error processing image'}), 400
