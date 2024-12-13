@@ -1,3 +1,6 @@
+// Define the endpoint to send data towards
+var endpoint;
+
 // Request access to media devices to prompt for permissions
 navigator.mediaDevices.getUserMedia({ video: true, audio: false })
   .then((stream) => {
@@ -49,8 +52,16 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       // Convert the image to Base64
       const imageData = canvas.toDataURL('image/jpg');
 
+      // Find endpoint to send data towards
+      var subpage = window.location.pathname;
+      if (subpage === "/rentPage") {
+        endpoint = '/detect'
+      } else if (subpage === '/returnPage') {
+        endpoint = '/detectReturn'
+      }
+
       // POST Request 
-      fetch('/detect', {
+      fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -131,7 +142,13 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       
       localStorage.setItem('ballType', ballType);
       localStorage.setItem('accuracy', accuracy);
-      window.location.href = '/finalRent';
+      // Redirect based on what the current functionality is
+      if (endpoint === '/detect') {
+        window.location.href = '/finalRent';
+      }
+      else {
+        window.location.href = '/finalReturn'
+      }
     }
 
     // Call snapshot function 
@@ -139,7 +156,7 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
 
     // Take snapshots continuously
     // Time interval to be changed
-    setInterval(takeSnapshot, 1000);
+    setInterval(takeSnapshot, 500);
   })
   .catch((err) => {
     console.error(`${err.name}: ${err.message}`);

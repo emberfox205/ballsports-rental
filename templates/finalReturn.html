@@ -3,17 +3,26 @@
 {%block content%}
 <div class="main-overall-box">
     <div class="receipt-header">
-        <h1 class="rent-title">Confirm your Payment</h1>
+        <h1 class="rent-title">Confirm Checkout</h1>
         <p class="receipt-warning">Please review all information carefully</p>
     </div>
-    <div class="receipt-content">
-        <ol class="rental-list">
-            <li>Item: <div class="receipt-text-item" id="object">N/A</div></li>
-            <li>Accuracy: <div class="receipt-text-item" id="accuracy">N/A</div></li>
-            <li>Date: <div class="receipt-text-item" id="date">N/A</div></li>
-            <li>User: <div class="receipt-text-item" id="user">N/A</div></li>
-            <li>Cost: <div class="receipt-text-item" id="cost">N/A</div></li>
-        </ol>
+    <div class="content-container">
+        <div class="receipt-content">
+            <ol class="rental-list">
+                <li>Fee: <div class="receipt-text-item" id="fee"><b>N/A</b></div></li>
+                <li>Item: <div class="receipt-text-item" id="object">N/A</div></li>
+                <li>Accuracy: <div class="receipt-text-item" id="accuracy">N/A</div></li>
+                <li>Date: <div class="receipt-text-item" id="date">N/A</div></li>
+                <li>User: <div class="receipt-text-item" id="user">N/A</div></li>
+            </ol>
+        </div>
+        <div id="QR-container">
+            <ol id="payment-qr-text">
+                <li><div id="payment-text-header"><h5>Ready to pay?</h5></div></li>
+                <li><div id="payment-text-body">Open your VCB Digibank app and scan the QR code.</div></li>
+            </ol>
+            <img id="QR-payment" src="static/icons/Dummy QR.png" width="110px", height="110px">
+        </div>
     </div>
     <div class="receipt-buttons">
         <ol class="receipt-buttons-list">
