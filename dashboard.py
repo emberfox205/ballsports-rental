@@ -151,7 +151,7 @@ def returnning():
         if returned[0] == 0:
             return jsonify(redirect=url_for('returnPage'))
         else:
-            return jsonify(alert="Rent something first.")
+            return jsonify(alert="You have nothing to return !")
     else:
         return redirect(url_for('login'))
     
