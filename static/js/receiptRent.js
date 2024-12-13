@@ -13,12 +13,20 @@ function retrieveDetection() {
 }
 
 // Send data upon clicking
-function sendRentInfo() {
+function sendInfo() {
     const ballType = localStorage.getItem('ballType');
     const accuracy = localStorage.getItem('accuracy');
     const currentTimestamp = new Date().getTime();
 
-    fetch('/confirmRent', {
+    // Find endpoint to send data towards
+    var subpage = window.location.pathname;
+    if (subpage === '/finalRent') {
+      endpoint = '/confirmRent'
+    } else if (subpage === '/finalReturn') {
+      endpoint = '/confirmReturn'
+    }
+
+    fetch(endpoint, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -35,7 +43,7 @@ function sendRentInfo() {
 }
 
 function logOut() {
-    sendRentInfo();
+    sendInfo();
     window.location.href='logout';
 }
 
