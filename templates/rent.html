@@ -28,19 +28,6 @@
         <link rel = "stylesheet" href="{{url_for('static', filename = 'css/rent.css')}}">
         <link rel = "stylesheet" href="{{url_for('static', filename = 'css/receipt.css')}}">
     </head>
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-          if (localStorage.getItem('showAlert') === 'true') {
-              alert('! You have nothing to return ! \n Please rent something');
-              localStorage.removeItem('showAlert');
-          }
-      });
-  </script>
-    <script>
-      function goBack() {
-          window.history.back();
-      }
-    </script>
     <body>
       {%block content%}
       <script src="{{url_for('static', filename = 'js/scan.js') }}"></script>
@@ -55,7 +42,7 @@
             </div>
             <div class="accuracy" id="accuracy">Accuracy</div>
             <div class="ball" id="ball-type">Ball-Type</div>
-            <button class="back" onclick="goBack()">Back</button>
+            <button class="back" onclick="window.location.href='/dashboard'">Back</button>
           </div>
           
       {%endblock%}

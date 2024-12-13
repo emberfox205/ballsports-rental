@@ -50,7 +50,7 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       const imageData = canvas.toDataURL('image/jpg');
 
       // POST Request 
-      fetch('/detectReturn', {
+      fetch('/detect', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

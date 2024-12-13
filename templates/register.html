@@ -33,9 +33,11 @@
                         <input type="password" name = "password" placeholder="Enter your password" required style="border-color: orange;  border-radius: 7px;"> 
                     </div> 
                 </p>    
-                <p><input type="submit" value="Enter" class="button" id="log-gister" style="width:100%; right:0%;"></p>
+                <p><input type="submit" value="Enter" class="button" id="log-gister"></p>
             </form> 
-        </div>
+            <p class="option-login" style="position: absolute; bottom:22%; ; color: grey">Already have an account?</p>
+            <button class="signUp" onclick="window.location.href='/login'">Log In</button>
+            </div>
     </div>
     <script>
         document.querySelector('form').addEventListener('submit', function(event) {

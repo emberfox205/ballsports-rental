@@ -39,8 +39,40 @@
                 </div>
             </div>
         <div class = "flexbox-container">
-            <button class="box" onclick="redirectTo('{{ url_for('rent')}}')">Rent</button>
-            <button class="box" onclick="redirectTo('{{ url_for('returnning')}}')">Return</button>
-        </div>
+            <button class="box" id="rentButton">Rent</button>
+            <button class="box" id="returnButton">Return</button>
+
+        <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#rentButton').click(function() {
+                    $.ajax({
+                        type: 'GET',
+                        url: '/rent',
+                        success: function(response) {
+                            if (response.redirect) {
+                                window.location.href = response.redirect;
+                            } else if (response.alert) {
+                                alert(response.alert);
+                            }
+                        }
+                    });
+                });
+    
+                $('#returnButton').click(function() {
+                    $.ajax({
+                        type: 'GET',
+                        url: '/returnning',
+                        success: function(response) {
+                            if (response.redirect) {
+                                window.location.href = response.redirect;
+                            } else if (response.alert) {
+                                alert(response.alert);
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
     </body>
 </html>

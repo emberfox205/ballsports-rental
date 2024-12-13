@@ -58,7 +58,7 @@ def login():
         if found_user:
             
             if password == found_user.password:
-                return redirect(url_for('dashboard'))
+                return render_template("dashboard.html")
             else:
                 flash("Please type the correct PASSWORD !")
                 session.pop("email",None)
@@ -100,7 +100,6 @@ def register():
             account = User(email=email, password=password)
             db.session.add(account)
             db.session.commit()
-            flash("User created successfully!")
             return redirect(url_for("login"))
     else:
         return render_template("register.html")
@@ -111,7 +110,13 @@ def dashboard():
         return render_template("dashboard.html")
     else:
         return redirect(url_for("login"))
-    
+@app.route('/rentPage')
+def rentPage():
+    if "email" in session:
+        return render_template("rent.html")
+    else:
+        return redirect(url_for("login"))
+
 @app.route('/rent')
 def rent():
     if "email" in session:
@@ -121,17 +126,19 @@ def rent():
         returned = cur.fetchone()
         connect.commit()
         if not returned or returned[0] == 1:
-            return render_template('rent.html')
+            return jsonify(redirect=url_for('rentPage'))
         else:
-            return '''
-            <script>
-                localStorage.setItem('showAlert', 'true');
-                window.location.href = '/returnning';
-            </script>
-            '''
+            return jsonify(alert="Please return the item first.")
     else:
-        return redirect(url_for("login"))   
-    
+        return redirect(url_for('login'))
+
+@app.route('/renturnPage')
+def returnPage():
+    if "email" in session:
+        return render_template("return.html")
+    else:
+        return redirect(url_for("login"))
+  
 @app.route('/returnning')
 def returnning():
     if "email" in session:
@@ -140,17 +147,12 @@ def returnning():
         cur.execute("SELECT returned FROM ballRent WHERE email = ? ORDER BY ID DESC LIMIT 1", (gmail,))
         returned = cur.fetchone()
         connect.commit()
-        if returned[0] == 0:
-            return render_template('return.html')
-        else:
-            return '''
-            <script>
-                localStorage.setItem('showAlert', 'true');
-                window.location.href = '/rent';
-            </script>
-            '''
+        if returned is None or returned[0] == 1:
+            return jsonify(alert="Rent something first.")
+        elif returned[0] == 0:
+            return jsonify(redirect=url_for('returnPage'))
     else:
-        return redirect(url_for("login"))  
+        return redirect(url_for('login'))
     
 @app.route('/finalRent')
 def finalRent():
@@ -272,7 +274,7 @@ def detect():
             return jsonify({
                 'ball_name': is_recognized["class_name"],
                 'confidence': is_recognized["confidence"]
-                #,'logo_flag': is_recognized["logo_flag"]
+                ,'logo_flag': is_recognized["logo_flag"]
             }), 200
         else:
             return jsonify({'error': 'Error processing image'}), 400
@@ -360,7 +362,7 @@ def detectReturn():
             return jsonify({
                 'ball_name': is_recognized["class_name"],
                 'confidence': is_recognized["confidence"]
-                #,'logo_flag': is_recognized["logo_flag"]
+                ,'logo_flag': is_recognized["logo_flag"]
             }), 200
         else:
             return jsonify({'error': 'Error processing image'}), 400
