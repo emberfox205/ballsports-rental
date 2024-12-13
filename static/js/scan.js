@@ -54,9 +54,9 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
 
       // Find endpoint to send data towards
       var subpage = window.location.pathname;
-      if (subpage === "/rent") {
+      if (subpage === "/rentPage") {
         endpoint = '/detect'
-      } else if (subpage === '/returnning') {
+      } else if (subpage === '/returnPage') {
         endpoint = '/detectReturn'
       }
 
@@ -156,7 +156,7 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
 
     // Take snapshots continuously
     // Time interval to be changed
-    setInterval(takeSnapshot, 1000);
+    setInterval(takeSnapshot, 500);
   })
   .catch((err) => {
     console.error(`${err.name}: ${err.message}`);
