@@ -132,7 +132,7 @@ def rent():
     else:
         return redirect(url_for('login'))
 
-@app.route('/renturnPage')
+@app.route('/returnPage')
 def returnPage():
     if "email" in session:
         return render_template("return.html")
@@ -163,7 +163,7 @@ def finalRent():
 
 @app.route('/confirmRent', methods = ["POST"])
 def confirmRent():
-    data = request.json()
+    data = request.get_json()
     if not data or not all(k in data for k in ("ball_name", "confidence", "date")):
         print("Received Unsuccessfully")
         return jsonify({'error': 'No data provided'}), 400
@@ -181,7 +181,7 @@ def confirmRent():
 @app.route('/confirmReturn', methods = ["POST"])
 def confirmReturn():
 
-    data = request.json()
+    data = request.get_json()
     if not data or not all(k in data for k in ("ball_name", "confidence", "date")):
         print("Received Unsuccessfully")
         return jsonify({'error': 'No data provided'}), 400
