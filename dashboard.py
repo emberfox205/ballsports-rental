@@ -107,15 +107,16 @@ def register():
 @app.route("/dashboard")
 def dashboard():
     if "email" in session:
+        session["redirect_flag"] = "DASHBOARD" # Prevent manual address exploitation
         return render_template("dashboard.html")
     else:
         return redirect(url_for("login"))
 @app.route('/rentPage')
 def rentPage():
-    if "email" in session:
+    if "email" in session and session.get("redirect_flag") == "RENT":
         return render_template("rent.html")
     else:
-        return redirect(url_for("login"))
+        return redirect(url_for("dashboard"))
 
 @app.route('/rent')
 def rent():
@@ -126,18 +127,19 @@ def rent():
         returned = cur.fetchone()
         connect.commit()
         if not returned or returned[0] == 1:
+            session["redirect_flag"] = "RENT"
             return jsonify(redirect=url_for('rentPage'))
         else:
             return jsonify(alert="Please return the item first.")
     else:
-        return redirect(url_for('login'))
+        return redirect(url_for("dashboard"))
 
 @app.route('/returnPage')
 def returnPage():
-    if "email" in session:
+    if "email" in session and session.get("redirect_flag") == "RETURN":
         return render_template("return.html")
     else:
-        return redirect(url_for("login"))
+        return redirect(url_for("dashboard"))
   
 @app.route('/returnning')
 def returnning():
@@ -150,16 +152,24 @@ def returnning():
         if returned is None or returned[0] == 1:
             return jsonify(alert="Rent something first.")
         elif returned[0] == 0:
+            session["redirect_flag"] = "RETURN"
             return jsonify(redirect=url_for('returnPage'))
     else:
-        return redirect(url_for('login'))
+        return redirect(url_for("dashboard"))
     
 @app.route('/finalRent')
 def finalRent():
-    if "email" in session: #and session.get("redirect_flag") == 1: # You can only access this page through redirection, commented for dev purposes
+    if "email" in session and session.get("redirect_flag") == "FINALRENT": # You can only access this page through redirection, commented for dev purposes
         return render_template("finalRent.html")
     else:
-        return redirect(url_for("login"))
+        return redirect(url_for("dashboard"))
+
+@app.route('/finalReturn')
+def finalReturn():
+    if "email" in session and session.get("redirect_flag") == "FINALRETURN": # You can only access this page through redirection, commented for dev purposes
+        return render_template("finalReturn.html")
+    else:
+        return redirect(url_for("dashboard"))
 
 @app.route('/confirmRent', methods = ["POST"])
 def confirmRent():
@@ -177,10 +187,10 @@ def confirmRent():
     cur.execute("""INSERT INTO ballRent (ball, date, email, returned) VALUES (?, ?, ?, ?)""", values)
     connect.commit()
     connect.close()
+    return jsonify({'success': 'rent confirmed'}), 200
 
 @app.route('/confirmReturn', methods = ["POST"])
 def confirmReturn():
-
     data = request.get_json()
     if not data or not all(k in data for k in ("ball_name", "confidence", "date")):
         print("Received Unsuccessfully")
@@ -189,17 +199,11 @@ def confirmReturn():
     print("Successfully Received")
     connect, cur = connectDb()
     cur.execute("""UPDATE ballRent SET returned = ? WHERE ball = ? AND email = ?""", 
-                    (1, data["ball_name"], session.get('email')))
+                (1, data["ball_name"], session.get('email')))
     connect.commit()
     connect.close()
+    return jsonify({'success': 'Return confirmed'}), 200
 
-@app.route('/finalReturn')
-def finalReturn():
-    if "email" in session: #and session.get("redirect_flag") == 1: # You can only access this page through redirection, commented for dev purposes
-        
-        return render_template("finalReturn.html")
-    else:
-        return redirect(url_for("login"))
     
 @app.route("/detect", methods=["POST", "GET"])
 def detect():
@@ -258,7 +262,7 @@ def detect():
                 recognition_data['recognition_count'] = 1
                 is_recognized["logo_flag"] = 1
                 # Reset if no logo is detected
-            elif not check_logo:
+            else:
                 recognition_data['recognition_count'] = 0
                 
             session.modified = True  # Mark session as modified
@@ -267,6 +271,7 @@ def detect():
                 recognition_data['ball_name'] = None
                 recognition_data['confidence'] = None
                 recognition_data['recognition_count'] = 0
+                session["redirect_flag"] = "FINALRENT"
                 return jsonify({'redirect': 1}), 200
         # Return result regardless the accuracy
         if is_recognized:
@@ -314,13 +319,14 @@ def detectReturn():
         recognition_data = session['recognition_data']
         print(f"Repeated {recognition_data['recognition_count']} times.")
         
-        if is_recognized and is_recognized["confidence"] > 0.70:
+        if is_recognized and is_recognized["confidence"] > 0.85:
             check_logo = logo_check(logo, image)
             connect, curr = connectDb()
             curr.execute("select ball from ballRent ")
             gmail = session.get('email')
             curr.execute("SELECT ball FROM ballRent WHERE email = ? ORDER BY ID DESC LIMIT 1", (gmail,))
             rentedBall = curr.fetchone()
+            print()
             connect.commit()
             if rentedBall and rentedBall[0] == is_recognized["class_name"]:
                 print("YESSSS")
@@ -337,7 +343,6 @@ def detectReturn():
                     recognition_data['confidence'] = is_recognized["confidence"]
                     recognition_data['recognition_count'] += 1
                     is_recognized["logo_flag"] = 1
-                
                 # Reset if different result is detected with logo
                 elif recognition_data['ball_name'] != is_recognized["class_name"] and check_logo:
                     recognition_data['ball_name'] = is_recognized["class_name"]
@@ -345,13 +350,16 @@ def detectReturn():
                     recognition_data['recognition_count'] = 1
                     is_recognized["logo_flag"] = 1
                     # Reset if no logo is detected
-                elif not check_logo:
+                else:
                     recognition_data['recognition_count'] = 0
                     
                 session.modified = True  # Mark session as modified
                 # Check if the count reaches the threshold
                 if recognition_data['recognition_count'] >= 3:
+                    recognition_data['ball_name'] = None
+                    recognition_data['confidence'] = None
                     recognition_data['recognition_count'] = 0
+                    session["redirect_flag"] = "FINALRETURN"
                     return jsonify({'redirect': 1}), 200
             else:
                 is_recognized["class_name"] = "Not Rented Ball"
@@ -369,7 +377,16 @@ def detectReturn():
     else:
         return jsonify({'error': 'Method Not Allowed'}), 405
         
-
+@app.route('/allData')
+def allData():
+    if "email" in session and session["email" == "admin123@rentball.com"]:
+        connect, cur = connectDb()
+        cur.execute("SELECT * FROM ballRent")
+        data = cur.fetchall()
+        
+        return jsonify(data)
+    else:
+        return redirect(url_for("login"))
 
 if __name__ == "__main__":          
     with app.app_context():

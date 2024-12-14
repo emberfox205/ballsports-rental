@@ -22,6 +22,10 @@ def initial():
     try:
         connect = sqlite3.connect(db_path)
         cur = connect.cursor()
+        
+        cur.execute("DROP TABLE IF EXISTS stock") # Comment if you dont want do drop
+        cur.execute("DROP TABLE IF EXISTS ballRent")  # Comment if you dont want do drop
+        
         cur.execute('''CREATE TABLE IF NOT EXISTS stock 
                         (ball TEXT PRIMARY KEY , quantity INTEGER)''')
 
