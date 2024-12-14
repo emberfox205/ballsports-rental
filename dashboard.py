@@ -379,7 +379,7 @@ def detectReturn():
         
 @app.route('/allData')
 def allData():
-    if "email" in session:
+    if "email" in session and session["email" == "admin123@rentball.com"]:
         connect, cur = connectDb()
         cur.execute("SELECT * FROM ballRent")
         data = cur.fetchall()
