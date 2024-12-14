@@ -112,7 +112,7 @@ def dashboard():
         return redirect(url_for("login"))
 @app.route('/rentPage')
 def rentPage():
-    if "email" in session:
+    if "email" in session and session.get("redirect_flag") == 1:
         return render_template("rent.html")
     else:
         return redirect(url_for("login"))
@@ -156,7 +156,7 @@ def returnning():
     
 @app.route('/finalRent')
 def finalRent():
-    if "email" in session: #and session.get("redirect_flag") == 1: # You can only access this page through redirection, commented for dev purposes
+    if "email" in session and session.get("redirect_flag") == 1: # You can only access this page through redirection, commented for dev purposes
         return render_template("finalRent.html")
     else:
         return redirect(url_for("login"))
@@ -195,7 +195,7 @@ def confirmReturn():
 
 @app.route('/finalReturn')
 def finalReturn():
-    if "email" in session: #and session.get("redirect_flag") == 1: # You can only access this page through redirection, commented for dev purposes
+    if "email" in session and session.get("redirect_flag") == 1: # You can only access this page through redirection, commented for dev purposes
         
         return render_template("finalReturn.html")
     else:
