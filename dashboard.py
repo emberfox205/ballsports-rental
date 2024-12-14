@@ -343,7 +343,8 @@ def detectReturn():
                     recognition_data['confidence'] = is_recognized["confidence"]
                     recognition_data['recognition_count'] += 1
                     is_recognized["logo_flag"] = 1
-                
+                elif recognition_data['ball_name'] == is_recognized["class_name"] and not check_logo:
+                    recognition_data['recognition_count'] -= 1
                 # Reset if different result is detected with logo
                 elif recognition_data['ball_name'] != is_recognized["class_name"] and check_logo:
                     recognition_data['ball_name'] = is_recognized["class_name"]
