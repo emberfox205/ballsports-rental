@@ -72,13 +72,11 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       .then(response => response.json())
       .then(data => {
         console.log(data);
+        updateBallDetection(data);
+        updateStatusDetection(data);
         if ('redirect' in data) {
           detectionRedirect();
         }
-        else if ('ball_name' in data) {
-          updateBallDetection(data);
-          updateStatusDetection(data);
-        };
       })
       .catch((error) => {
         console.error('Error: ', error);
