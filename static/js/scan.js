@@ -1,6 +1,17 @@
 // Define the endpoint to send data towards
 var endpoint;
 
+// Obj to fix detection format
+const formalBallNames = {
+  'american_football': 'American football',
+  'baseball': 'Baseball',
+  'basketball': 'Basketball',
+  'football': 'Football',
+  'table_tennis_ball': 'Table tennis',
+  'tennis_ball': 'Tennis',
+  'volleyball': 'Volleyball'
+}
+
 // Request access to media devices to prompt for permissions
 navigator.mediaDevices.getUserMedia({ video: true, audio: false })
   .then((stream) => {
@@ -72,10 +83,10 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       .then(response => response.json())
       .then(data => {
         console.log(data);
-        updateBallDetection(data);
-        updateStatusDetection(data);
+        updateBallDetection(fixFormat(data));
+        updateStatusDetection(fixFormat(data));
         if ('redirect' in data) {
-          detectionRedirect();
+          detectionRedirect(data);
         }
       })
       .catch((error) => {
@@ -104,16 +115,26 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       }
     }
 
+    // Fix ball names and numbere formatting
+    function fixFormat(response) {
+      // Fix ball names' captalization and other formatting
+      if (formalBallNames.hasOwnProperty(response.ball_name)) {
+        response.ball_name = formalBallNames[response.ball_name];
+      }
+
+      // Round accuracy 
+      if (typeof response.confidence === 'number') {
+        response.confidence = response.confidence.toFixed(4);
+      }
+
+      return response;
+    }
+
     // Update components on /rent with response data
     function updateBallDetection(detectionResponse) {
       var ballType = detectionResponse.ball_name || "Unknown";
       var accuracy = detectionResponse.confidence || "N/A";
       
-      // Round accuracy 
-      if (typeof accuracy === 'number') {
-        accuracy = accuracy.toFixed(4);
-      }
-
       // Modify HTML elements based on response
       document.getElementById('ball-type').textContent = ballType;
       document.getElementById('accuracy').textContent = accuracy;
@@ -130,13 +151,11 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       }
     }
     
-
-
     // Redirect on successful detection
     // Add data to local storage to be redisplayed to the Confirmation page 
-    function detectionRedirect() {
-      const ballType = document.getElementById('ball-type').textContent;
-      const accuracy = document.getElementById('accuracy').textContent;
+    function detectionRedirect(response) {
+      var ballType = response.ball_name;
+      var accuracy = response.confidence;
       
       localStorage.setItem('ballType', ballType);
       localStorage.setItem('accuracy', accuracy);
