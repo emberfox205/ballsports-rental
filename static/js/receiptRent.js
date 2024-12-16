@@ -1,7 +1,33 @@
+const formalBallNames = {
+    'american_football': 'American football',
+    'baseball': 'Baseball',
+    'basketball': 'Basketball',
+    'football': 'Football',
+    'table_tennis_ball': 'Table tennis',
+    'tennis_ball': 'Tennis',
+    'volleyball': 'Volleyball'
+  }
+
+// Fix ball names and numbere formatting
+function fixFormat(response) {
+    // Fix ball names' captalization and other formatting
+    if (formalBallNames.hasOwnProperty(response.ball_name)) {
+        response.ball_name = formalBallNames[response.ball_name];
+    }
+
+    // Round accuracy 
+    if (typeof response.confidence === 'number') {
+        response.confidence = response.confidence.toFixed(4);
+    }
+
+    return response;
+}
+
 function retrieveDetection() {
-    const ballType = localStorage.getItem('ballType');
-    const accuracy = localStorage.getItem('accuracy');
-    const email = localStorage.getItem('user');
+    var formattedStorage = fixFormat(localStorage);
+    const ballType = formattedStorage.getItem('ballType');
+    const accuracy = formattedStorage.getItem('accuracy');
+    const email = formattedStorage.getItem('user');
     const currentTimestamp = new Date().getTime(); 
 
     const formattedDate = new Date(currentTimestamp).toLocaleString();
