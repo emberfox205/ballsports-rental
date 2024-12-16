@@ -22,7 +22,7 @@ Alternatively, if you have SSH installed:
 git clone git@github.com:emberfox205/ballsports-rental.git
 ```
 
-[Optional] Setup a virtual environment of your choice (e.g. venv, conda). Make sure the Python version is 3.12.0.
+**[Optional]** Set up a virtual environment of your choice (e.g. venv, conda, etc.). Make sure the Python version is 3.12.0.
 
 Install dependencies:
 
@@ -58,7 +58,7 @@ Use OpenSSL:
 - Linux:
   - [Guide](https://docs.openiam.com/docs-4.2.1.3/appendix/2-openssl)
 
-> [!note] For Windows users
+> [!note] 
 > If you follow the usage guide for Windows, the key and certificate should be found in `C:\\Users\\USER`.
 > `USER` may differ on your device.
 >
@@ -73,9 +73,9 @@ Rename the certificate into `certificate.crt`.
 
 Rename the key into `private.key`.
 
-## Running the program
+## Running the application
 
-While in the local repo, enter into the terminal:
+While in your local repo, enter into the terminal:
 
 ```Bash
 python dashboard.py
