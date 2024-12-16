@@ -36,9 +36,9 @@ def process_image(model, img) -> dict:
         predictions = model.predict(preprocessed_img)
         predicted_class_idx = np.argmax(predictions[0])
         confidence = predictions[0][predicted_class_idx]
-        print({
-            'class_name': class_names[predicted_class_idx],
-            'confidence': float(confidence)})
+        #print({
+        #   'class_name': class_names[predicted_class_idx],
+        #   'confidence': float(confidence)})
         return {'class_name': class_names[predicted_class_idx],'confidence': float(confidence)}
        
     except Exception as e:
@@ -51,9 +51,9 @@ def logo_check(model, img) -> dict:
         predictions = model.predict(preprocessed_img)
         predicted_class_idx = np.argmax(predictions[0])
         confidence = predictions[0][predicted_class_idx]
-        print({
-            'class_name': class_logo_names[predicted_class_idx],
-            'confidence': float(confidence)})
+        #print({
+        #   'class_name': class_logo_names[predicted_class_idx],
+        #   'confidence': float(confidence)})
         if class_logo_names[predicted_class_idx] == 'with_logo' and confidence >= 0.8:
             return "logo"
         else:
