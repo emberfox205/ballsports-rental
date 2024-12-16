@@ -268,11 +268,15 @@ def detect():
             session.modified = True  # Mark session as modified
             # Check if the count reaches the threshold then reset it
             if recognition_data['recognition_count'] >= 3:
+                ball_name = recognition_data['ball_name']
+                confidence = recognition_data['confidence']
                 recognition_data['ball_name'] = None
                 recognition_data['confidence'] = None
                 recognition_data['recognition_count'] = 0
                 session["redirect_flag"] = "FINALRENT"
-                return jsonify({'redirect': 1}), 200
+                return jsonify({'redirect': 1, 'ball_name': ball_name, 'confidence':confidence}), 200
+        else:
+            recognition_data['recognition_count'] = 0
         # Return result regardless the accuracy
         if is_recognized:
             print( is_recognized["logo_flag"])
@@ -329,7 +333,7 @@ def detectReturn():
             print()
             connect.commit()
             if rentedBall and rentedBall[0] == is_recognized["class_name"]:
-                print("YESSSS")
+                print("It is the same ball ", rentedBall[0])
                 # First recognition with logo
                 if recognition_data['ball_name'] is None and check_logo:
                     recognition_data['ball_name'] = is_recognized["class_name"]
@@ -356,14 +360,17 @@ def detectReturn():
                 session.modified = True  # Mark session as modified
                 # Check if the count reaches the threshold
                 if recognition_data['recognition_count'] >= 3:
+                    ball_name = recognition_data['ball_name']
+                    confidence = recognition_data['confidence']
                     recognition_data['ball_name'] = None
                     recognition_data['confidence'] = None
                     recognition_data['recognition_count'] = 0
                     session["redirect_flag"] = "FINALRETURN"
-                    return jsonify({'redirect': 1}), 200
+                    return jsonify({'redirect': 1, 'ball_name': ball_name, 'confidence':confidence}), 200
             else:
                 is_recognized["class_name"] = "Not Rented Ball"
-            
+        else:
+            recognition_data['recognition_count'] = 0
             # Return result regardless the accuracy
         if is_recognized:
             print(is_recognized["logo_flag"])
