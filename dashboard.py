@@ -15,8 +15,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ballstorage.db'
 app.permanent_session_lifetime = timedelta(minutes= 5)
 app.config['SECRET_KEY'] = 'averysecretkey'
 db = SQLAlchemy(app)
-model = tf.keras.models.load_model('model/model.keras', compile=False)
 logo = tf.keras.models.load_model('model/logo.keras', compile=False)
+interpreter = tf.lite.Interpreter(model_path="model/model2.tflite")
+interpreter.allocate_tensors()
+input_details = interpreter.get_input_details()
+output_details = interpreter.get_output_details()
 
 with open("check_database.json") as f:
     data = json.load(f)
@@ -234,7 +237,7 @@ def detect():
             return jsonify({'error': str(e)}), 400
         
         # Detect the ball
-        is_recognized = process_image(model, image)  # return dict {"class_name": ,"confidence": }
+        is_recognized = process_image(interpreter, input_details, output_details, image)  # return dict {"class_name": ,"confidence": }
         is_recognized["logo_flag"] = 0
         recognition_data = session['recognition_data']
         
@@ -324,7 +327,7 @@ def detectReturn():
             return jsonify({'error': str(e)}), 400
         
         # Detect the ball
-        is_recognized = process_image(model, image)  # return dict {"class_name": ,"confidence": }
+        is_recognized = process_image(interpreter, input_details, output_details, image)  # return dict {"class_name": ,"confidence": }
         is_recognized["logo_flag"] = 0
         recognition_data = session['recognition_data']
         
