@@ -8,6 +8,7 @@ from io import BytesIO
 from PIL import Image
 from libs.img_handling import process_image, logo_check
 from initialize import initial
+import time
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ballstorage.db'
@@ -235,9 +236,8 @@ def detect():
         # Detect the ball
         is_recognized = process_image(model, image)  # return dict {"class_name": ,"confidence": }
         is_recognized["logo_flag"] = 0
-        print(f"Recognised {is_recognized['class_name']}, with {round(is_recognized['confidence'],4)} confidence")
         recognition_data = session['recognition_data']
-        print(f"Repeated {recognition_data['recognition_count']} times.")
+        
         
         if is_recognized and is_recognized["confidence"] > 0.85 :
             check_logo = logo_check(logo, image)
@@ -274,12 +274,19 @@ def detect():
                 recognition_data['confidence'] = None
                 recognition_data['recognition_count'] = 0
                 session["redirect_flag"] = "FINALRENT"
+                
+                print(f"Recognised {ball_name}, with {round(confidence, 4)} confidence")
+                print("Repeated 5 times.")
+                print("Logo detected" if is_recognized["logo_flag"] == 1 else "No Logo Detected")
+                
                 return jsonify({'redirect': 1, 'ball_name': ball_name, 'confidence':confidence}), 200
         else:
             recognition_data['recognition_count'] = 0
         # Return result regardless the accuracy
         if is_recognized:
-            print( is_recognized["logo_flag"])
+            print(f"Recognised {is_recognized['class_name']}, with {round(is_recognized['confidence'],4)} confidence")
+            print(f"Repeated {recognition_data['recognition_count']} times.")
+            print("Logo detected\n" if is_recognized["logo_flag"] == 1 else "No Logo Detected\n")
             return jsonify({
                 'ball_name': is_recognized["class_name"],
                 'confidence': is_recognized["confidence"]
@@ -319,9 +326,7 @@ def detectReturn():
         # Detect the ball
         is_recognized = process_image(model, image)  # return dict {"class_name": ,"confidence": }
         is_recognized["logo_flag"] = 0
-        print(f"Recognised {is_recognized['class_name']}, with {round(is_recognized['confidence'],4)} confidence")
         recognition_data = session['recognition_data']
-        print(f"Repeated {recognition_data['recognition_count']} times.")
         
         if is_recognized and is_recognized["confidence"] > 0.85:
             check_logo = logo_check(logo, image)
@@ -366,6 +371,9 @@ def detectReturn():
                     recognition_data['confidence'] = None
                     recognition_data['recognition_count'] = 0
                     session["redirect_flag"] = "FINALRETURN"
+                    print(f"Recognised {ball_name}, with {round(confidence, 4)} confidence")
+                    print("Repeated 5 times.")
+                    print("Logo detected" if is_recognized["logo_flag"] == 1 else "No Logo Detected")
                     return jsonify({'redirect': 1, 'ball_name': ball_name, 'confidence':confidence}), 200
             else:
                 is_recognized["class_name"] = "Not Rented Ball"
@@ -373,7 +381,9 @@ def detectReturn():
             recognition_data['recognition_count'] = 0
             # Return result regardless the accuracy
         if is_recognized:
-            print(is_recognized["logo_flag"])
+            print(f"Recognised {is_recognized['class_name']}, with {round(is_recognized['confidence'],4)} confidence")
+            print(f"Repeated {recognition_data['recognition_count']} times.")
+            print("Logo detected\n" if is_recognized["logo_flag"] == 1 else "No Logo Detected\n")
             return jsonify({
                 'ball_name': is_recognized["class_name"],
                 'confidence': is_recognized["confidence"]
