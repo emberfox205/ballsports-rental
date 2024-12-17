@@ -115,7 +115,7 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
       }
     }
 
-    // Fix ball names and numbere formatting
+    // Fix ball names and number formatting
     function fixFormat(response) {
       // Fix ball names' captalization and other formatting
       if (formalBallNames.hasOwnProperty(response.ball_name)) {
