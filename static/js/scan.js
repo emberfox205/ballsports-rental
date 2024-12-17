@@ -150,7 +150,7 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
     }
 
     // Call snapshot function 
-    takeSnapshot();
+
 
     // Take snapshots continuously
     // Time interval to be changed
