@@ -22,20 +22,25 @@ def preprocess_image(img, target_size=(224, 224)):
     # Convert to array and expand dimensions
     img_array = tf.keras.preprocessing.image.img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0)
+    img_array = img_array.astype(np.float32)
     
     # Normalize
     img_array = img_array / 255.0
-    
     return img_array
 
 
-def process_image(model, img) -> dict: 
+def process_image(interpreter, input_details, output_details, img) -> dict: 
     try:
         pil_img = img
-        preprocessed_img = preprocess_image(pil_img)
-        predictions = model.predict(preprocessed_img,verbose=0)
+        input_data = preprocess_image(pil_img)
+        interpreter.set_tensor(input_details[0]['index'], input_data)
+        interpreter.invoke()
+
+        predictions = np.copy(interpreter.get_tensor(output_details[0]['index']))
+        
         predicted_class_idx = np.argmax(predictions[0])
         confidence = predictions[0][predicted_class_idx]
+        
         #print({
         #   'class_name': class_names[predicted_class_idx],
         #   'confidence': float(confidence)})
@@ -57,7 +62,7 @@ def logo_check(model, img) -> dict:
         if class_logo_names[predicted_class_idx] == 'with_logo' and confidence >= 0.8:
             return "logo"
         else:
-            None
+            return None
         
     except Exception as e:
         print(f"Error processing image: {str(e)}")
