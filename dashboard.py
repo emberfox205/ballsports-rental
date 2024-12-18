@@ -267,7 +267,7 @@ def detect():
                 
             session.modified = True  # Mark session as modified
             # Check if the count reaches the threshold then reset it
-            if recognition_data['recognition_count'] >= 3:
+            if recognition_data['recognition_count'] >= 5:
                 ball_name = recognition_data['ball_name']
                 confidence = recognition_data['confidence']
                 recognition_data['ball_name'] = None
@@ -364,7 +364,7 @@ def detectReturn():
                     
                 session.modified = True  # Mark session as modified
                 # Check if the count reaches the threshold
-                if recognition_data['recognition_count'] >= 3:
+                if recognition_data['recognition_count'] >= 5:
                     ball_name = recognition_data['ball_name']
                     confidence = recognition_data['confidence']
                     recognition_data['ball_name'] = None
@@ -411,4 +411,3 @@ if __name__ == "__main__":
         db.create_all()
     # cert goes before private key
     app.run(host="0.0.0.0", port=8080, debug=True, ssl_context=("certs/certificate.crt", "certs/private.key"))
-
