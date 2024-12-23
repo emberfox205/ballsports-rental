@@ -49,7 +49,30 @@ def process_image(interpreter, input_details, output_details, img) -> dict:
     except Exception as e:
         print(f"Error processing image: {str(e)}")
         return None
-def logo_check(model, img) -> dict:
+def logo_check(interpreter, input_details, output_details, img) -> dict: 
+    try:
+        pil_img = img
+        input_data = preprocess_image(pil_img, target_size=(160, 160))
+        interpreter.set_tensor(input_details[0]['index'], input_data)
+        interpreter.invoke()
+
+        predictions = np.copy(interpreter.get_tensor(output_details[0]['index']))
+        
+        predicted_class_idx = np.argmax(predictions[0])
+        confidence = predictions[0][predicted_class_idx]
+        
+        #print({
+        #   'class_name': class_names[predicted_class_idx],
+        #   'confidence': float(confidence)})
+        if class_logo_names[predicted_class_idx] == 'with_logo' and confidence >= 0.8:
+            return "logo"
+        else:
+            return None
+    except Exception as e:
+        print(f"Error processing image: {str(e)}")
+        return None
+    
+def logo_check_(model, img) -> dict:
     try:
         pil_img = img
         preprocessed_img = preprocess_image(pil_img, target_size = (160,160))

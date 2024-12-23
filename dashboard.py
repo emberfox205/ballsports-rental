@@ -15,11 +15,21 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ballstorage.db'
 app.permanent_session_lifetime = timedelta(minutes= 5)
 app.config['SECRET_KEY'] = 'averysecretkey'
 db = SQLAlchemy(app)
-logo = tf.keras.models.load_model('model/logo.keras', compile=False)
-interpreter = tf.lite.Interpreter(model_path="model/model2.tflite")
-interpreter.allocate_tensors()
-input_details = interpreter.get_input_details()
-output_details = interpreter.get_output_details()
+def initialize_interpreters():
+    global model_inteprtr, model_input_details, model_output_details
+    global logo_inteprtr, logo_input_details, logo_output_details
+
+    model_inteprtr = tf.lite.Interpreter(model_path="model/model2.tflite")
+    model_inteprtr.allocate_tensors()
+    model_input_details = model_inteprtr.get_input_details()
+    model_output_details = model_inteprtr.get_output_details()
+
+    logo_inteprtr = tf.lite.Interpreter(model_path="model/logo2.tflite")
+    logo_inteprtr.allocate_tensors()
+    logo_input_details = logo_inteprtr.get_input_details()
+    logo_output_details = logo_inteprtr.get_output_details()
+
+initialize_interpreters()
 
 with open("check_database.json") as f:
     data = json.load(f)
@@ -237,13 +247,13 @@ def detect():
             return jsonify({'error': str(e)}), 400
         
         # Detect the ball
-        is_recognized = process_image(interpreter, input_details, output_details, image)  # return dict {"class_name": ,"confidence": }
+        is_recognized = process_image(model_inteprtr, model_input_details, model_output_details, image)  # return dict {"class_name": ,"confidence": }
         is_recognized["logo_flag"] = 0
         recognition_data = session['recognition_data']
-        
+    
         
         if is_recognized and is_recognized["confidence"] > 0.85 :
-            check_logo = logo_check(logo, image)
+            check_logo = logo_check(logo_inteprtr, logo_input_details, logo_output_details, image)
             # First recognition with logo
             if recognition_data['ball_name'] is None and check_logo:
                 recognition_data['ball_name'] = is_recognized["class_name"]
@@ -327,12 +337,12 @@ def detectReturn():
             return jsonify({'error': str(e)}), 400
         
         # Detect the ball
-        is_recognized = process_image(interpreter, input_details, output_details, image)  # return dict {"class_name": ,"confidence": }
+        is_recognized = process_image(model_inteprtr, model_input_details, model_output_details, image)  # return dict {"class_name": ,"confidence": }
         is_recognized["logo_flag"] = 0
         recognition_data = session['recognition_data']
         
         if is_recognized and is_recognized["confidence"] > 0.85:
-            check_logo = logo_check(logo, image)
+            check_logo = logo_check(logo_inteprtr, logo_input_details, logo_output_details, image)
             connect, curr = connectDb()
             curr.execute("select ball from ballRent ")
             gmail = session.get('email')
