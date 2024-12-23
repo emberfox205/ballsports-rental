@@ -169,11 +169,11 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
     }
 
     // Call snapshot function 
-    takeSnapshot();
+
 
     // Take snapshots continuously
     // Time interval to be changed
-    setInterval(takeSnapshot, 1000);
+    setInterval(takeSnapshot, 700);
   })
   .catch((err) => {
     console.error(`${err.name}: ${err.message}`);
