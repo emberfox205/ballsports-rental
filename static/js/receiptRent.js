@@ -8,26 +8,30 @@ const formalBallNames = {
     'volleyball': 'Volleyball'
   }
 
-// Fix ball names and numbere formatting
+// Fix ball names and number formatting
 function fixFormat(response) {
+    var formattedResponse = Object.assign({}, response);
+
     // Fix ball names' captalization and other formatting
-    if (formalBallNames.hasOwnProperty(response.ball_name)) {
-        response.ball_name = formalBallNames[response.ball_name];
+    if (formalBallNames.hasOwnProperty(response.ballType)) {
+        formattedResponse.ballType = formalBallNames[response.ballType];
     }
 
-    // Round accuracy 
-    if (typeof response.confidence === 'number') {
-        response.confidence = response.confidence.toFixed(4);
+    // Retrieve accuracy as string. Cast to a float and round up
+    if (typeof response.accuracy !== 'number') {
+        formattedResponse.accuracy = parseFloat(response.accuracy);
     }
+    formattedResponse.accuracy = formattedResponse.accuracy.toFixed(4);
 
-    return response;
+    return formattedResponse;
 }
 
 function retrieveDetection() {
     var formattedStorage = fixFormat(localStorage);
-    const ballType = formattedStorage.getItem('ballType');
-    const accuracy = formattedStorage.getItem('accuracy');
-    const email = formattedStorage.getItem('user');
+
+    const ballType = formattedStorage.ballType;
+    const accuracy = formattedStorage.accuracy;
+    const email = formattedStorage.user;
     const currentTimestamp = new Date().getTime(); 
 
     const formattedDate = new Date(currentTimestamp).toLocaleString();
