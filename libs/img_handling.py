@@ -57,7 +57,7 @@ def logo_check(model, img) -> dict:
         if class_logo_names[predicted_class_idx] == 'with_logo' and confidence >= 0.8:
             return "logo"
         else:
-            None
+            return None
         
     except Exception as e:
         print(f"Error processing image: {str(e)}")
