@@ -8,7 +8,7 @@ Computer Vision project to automate the dispense and retrieval of rental equipme
 
 ## Installation
 
-### Repo preparation
+## Repo preparation
 
 Clone the repository via HTTPS:
 
@@ -32,7 +32,7 @@ pip install -r requirements.txt
 
 In the file `check_database.json`, set `{"database_init": 0}`.
 
-### Model installation
+## Model installation
 
 This repository only offers the web application interface for the ball classification and logo detection models.
 
@@ -46,7 +46,7 @@ Rename the ball classification model into `model.keras`.
 
 Rename the logo detection model into `logo.keras`.
 
-### HTTPS Certification
+## HTTPS Certification
 
 As the application utilizes the device's integrated webcam, you are required to generate an https certificate and key.
 
@@ -73,7 +73,7 @@ Rename the certificate into `certificate.crt`.
 
 Rename the key into `private.key`.
 
-## Running the application
+# Running the application
 
 While in your local repo, enter into the terminal:
 
